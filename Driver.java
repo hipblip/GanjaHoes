@@ -56,15 +56,17 @@ public class Driver {
 	public Driver()
 	{
 		initBoard();		
-		intro();
+		//intro();
 		gamePause();
 		// Game Loop
 		while (true)
 		{
-			break;
+			printBoard();
+			makeMove(turn);
+			
 		}
 		
-		exit();
+		//exit();
 	}
 	
 	public static void main(String[] args) 
@@ -193,29 +195,53 @@ public class Driver {
 		//sc.close();
 	}
 	
-	static void makeMove(int turn) 
+static void makeMove(int turn) 
 	{
 		String pos1;
 		String pos2;
 
 		if (turn%2 == 0) // White's turn
 		{
-			System.out.print("Please enter 2 consecutive vertical positions:\n1: ");
+			System.out.print("X's turn\nPlease enter 2 consecutive vertical positions:\n1: ");
 			pos1 = sc.nextLine();
 			System.out.print("2: ");
 			pos2 = sc.nextLine();
 			
 			//check;
-			System.out.println(legalWhiteMove(pos1, pos2));
+			if (legalWhiteMove(pos1, pos2)) 
+			{
+				char pos1Let = pos1.charAt(0);
+				char pos2Let = pos2.charAt(0);
+				int x1 = pos1Let - 65;
+				int x2 = pos2Let - 65;
+				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
+				int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
+				gameBoard[x1][y1] = 'X';
+				gameBoard[x2][y2] = 'X';
+			}
 			
 		}
 		else // Black's turn
 		{
-			System.out.print("Please enter 2 consecutive horizontal positions:\n1: ");
+			System.out.print("O's turn\nPlease enter 2 consecutive horizontal positions:\n1: ");
 			pos1 = sc.nextLine();
 			System.out.print("2: ");
 			pos2 = sc.nextLine();
+			
+			if (legalBlackMove(pos1, pos2)) 
+			{
+				char pos1Let = pos1.charAt(0);
+				char pos2Let = pos2.charAt(0);
+				int x1 = pos1Let - 65;
+				int x2 = pos2Let - 65;
+				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
+				int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
+				gameBoard[x1][y1] = 'O';
+				gameBoard[x2][y2] = 'O';
+			}
 		}
+		
+		passTurn();
 	}
 	
 	static boolean legalBlackMove(String pos1, String pos2) 

@@ -59,19 +59,20 @@ public class Driver {
 		//intro();
 		gamePause();
 		// Game Loop
-		while (true)
-		{
-			printBoard();
-			makeMove(turn);
-			
-		}
+		
 		
 		//exit();
 	}
 	
 	public static void main(String[] args) 
 	{
-		Driver d = new Driver();	
+		Driver d = new Driver();
+		
+		while (d.checkIfCanPlay() == true)
+		{
+			d.printBoard();
+			d.makeMove(turn);
+		}
 	}
 	
 	void checkAddNewPlayable(PlayablePair p, ArrayList pairs)
@@ -154,7 +155,7 @@ public class Driver {
 		}
 	}
 	
-	static void intro()
+	void intro()
 	{
 		
 		int response;
@@ -180,14 +181,14 @@ public class Driver {
 		
 	}
 		
-	static void exit() 
+	void exit() 
 	{
 		sc.close();
 		System.out.println("Exiting game without error");
 		System.exit(0);
 	}
 	
-	static void gamePause() 
+	void gamePause() 
 	{
 		//Scanner sc = new Scanner(System.in);
 		System.out.println("Press ENTER to continue...");
@@ -195,13 +196,13 @@ public class Driver {
 		//sc.close();
 	}
 	
-static void makeMove(int turn) 
+	void makeMove(int turn) 
 	{
 		String pos1;
 		String pos2;
 
 		if (turn%2 == 0) // White's turn
-		{
+		{	
 			System.out.print("X's turn\nPlease enter 2 consecutive vertical positions:\n1: ");
 			pos1 = sc.nextLine();
 			System.out.print("2: ");
@@ -244,7 +245,7 @@ static void makeMove(int turn)
 		passTurn();
 	}
 	
-	static boolean legalBlackMove(String pos1, String pos2) 
+	boolean legalBlackMove(String pos1, String pos2) 
 	{
 		char pos1Let = pos1.charAt(0);
 		char pos2Let = pos2.charAt(0);
@@ -287,7 +288,7 @@ static void makeMove(int turn)
 		}
 	}
 	
-	static boolean legalWhiteMove(String pos1, String pos2) 
+	boolean legalWhiteMove(String pos1, String pos2) 
 	{
 		char pos1Let = pos1.charAt(0);
 		char pos2Let = pos2.charAt(0);
@@ -333,7 +334,7 @@ static void makeMove(int turn)
 	/*
 	 * Initializes the game board to the given dimensions
 	*/
-	static void initBoard() 
+	void initBoard() 
 	{
 		gameBoard = new char[_BoardX][_BoardY];
 		for (int i = 0; i < _BoardX; i++) 
@@ -348,7 +349,7 @@ static void makeMove(int turn)
 	/*
 	 * Prints the current game board.
 	 */
-	static void printBoard()
+	void printBoard()
 	{
 		System.out.printf("%-5c%-5d%-5d%-5d%-5d%-5d%-5d%-5d%-5d%n", ' ', 1, 2, 3, 4, 5, 6, 7, 8);
 		for (int i = 0; i < _BoardX; i++)

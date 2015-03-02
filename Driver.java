@@ -19,20 +19,137 @@ public class Driver {
 	// White is X
 	// Black is O
 	
-	public static void main(String[] args) {
+	public class Vector2
+	{
+		public int x;
+		public int y;
 		
+		public Vector2(int x, int y)
+		{
+			this.x = x;
+			this.y = y;
+		}
+	}
+	
+	public class PlayablePair
+	{
+		public Vector2 spot1;
+		public Vector2 spot2;
+		
+		public PlayablePair(Vector2 v1, Vector2 v2)
+		{
+			spot1 = v1;
+			spot2 = v2;
+		}
+		
+		public boolean containsVector(Vector2 vec)
+		{
+			return (spot1 == vec || spot2 == vec);
+		}
+		
+		public String toString()
+		{
+			return spot1.x + ", " + spot1.y + " and " + spot2.x + ", " + spot2.y;
+		}
+	}
+	
+	public Driver()
+	{
 		initBoard();		
-		//intro();
+		intro();
 		gamePause();
 		// Game Loop
 		while (true)
 		{
-			printBoard();
-			makeMove(turn);
 			break;
 		}
 		
 		exit();
+	}
+	
+	public static void main(String[] args) 
+	{
+		Driver d = new Driver();	
+	}
+	
+	void checkAddNewPlayable(PlayablePair p, ArrayList pairs)
+	{
+		for (int i = 0; i < pairs.size(); i++)
+		{
+			PlayablePair cur = (PlayablePair) pairs.get(i);
+			
+			if (cur.containsVector(p.spot1) || cur.containsVector(p.spot2)) //duplicate spot, don't add it
+			{
+				return;
+			}
+		}
+		
+		pairs.add(p);
+	}
+	
+	boolean checkIfCanPlay()
+	{
+		ArrayList list = new ArrayList<Vector2>();
+		
+		for (int i = 0; i < _BoardX; i++) // gather all the empty spots
+		{
+			for (int j = 0; j < _BoardY; j++) 
+			{
+				Vector2 vec = new Vector2(i,j);
+				
+				if (gameBoard[i][j] == ' ' && !list.contains(vec))
+				{
+					list.add(vec);
+				}
+			}
+		}
+		
+		ArrayList pairs = new ArrayList<PlayablePair>();
+		
+		if (turn % 2 == 0) // white's turn, check all spots
+		{
+			for (int i = 0; i < list.size(); i++)
+			{
+				for (int j = i; j < list.size(); j++)
+				{
+					Vector2 sp1 = (Vector2) list.get(i);
+					Vector2 sp2 = (Vector2) list.get(j);
+					
+					if (sp2.y == sp1.y - 1 || sp2.y == sp1.y + 1)
+					{
+						checkAddNewPlayable(new PlayablePair(new Vector2(sp1.x, sp1.y), new Vector2(sp2.x, sp2.y)), pairs);
+					}
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < list.size(); i++)
+			{
+				for (int j = i; j < list.size(); j++)
+				{
+					Vector2 sp1 = (Vector2) list.get(i);
+					Vector2 sp2 = (Vector2) list.get(j);
+					
+					if (sp2.x == sp1.x - 1 || sp2.x == sp1.x + 1)
+					{
+						checkAddNewPlayable(new PlayablePair(new Vector2(sp1.x, sp1.y), new Vector2(sp2.x, sp2.y)), pairs);
+					}
+				}
+			}
+		}
+		
+		printPlays(pairs);
+		
+		return pairs.size() > 0;
+	}
+	
+	void printPlays(ArrayList plays)
+	{
+		for (int i = 0; i < plays.size(); i++)
+		{
+			System.out.println((PlayablePair) plays.get(i));
+		}
 	}
 	
 	static void intro()

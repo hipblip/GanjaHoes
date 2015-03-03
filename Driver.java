@@ -56,23 +56,20 @@ public class Driver {
 	public Driver()
 	{
 		initBoard();		
-		//intro();
-		gamePause();
-		// Game Loop
-		
-		
-		//exit();
+		intro();
+		//gamePause();
 	}
 	
 	public static void main(String[] args) 
 	{
 		Driver d = new Driver();
 		
-		while (d.checkIfCanPlay() == true)
+		while (d.checkIfCanPlay())
 		{
 			d.printBoard();
 			d.makeMove(turn);
 		}
+		d.exit();
 	}
 	
 	void checkAddNewPlayable(PlayablePair p, ArrayList pairs)
@@ -118,7 +115,7 @@ public class Driver {
 					Vector2 sp1 = (Vector2) list.get(i);
 					Vector2 sp2 = (Vector2) list.get(j);
 					
-					if (sp2.y == sp1.y - 1 || sp2.y == sp1.y + 1)
+					if ((sp2.y == sp1.y - 1 || sp2.y == sp1.y + 1) && sp1.x ==sp2.x)
 					{
 						checkAddNewPlayable(new PlayablePair(new Vector2(sp1.x, sp1.y), new Vector2(sp2.x, sp2.y)), pairs);
 					}
@@ -134,7 +131,7 @@ public class Driver {
 					Vector2 sp1 = (Vector2) list.get(i);
 					Vector2 sp2 = (Vector2) list.get(j);
 					
-					if (sp2.x == sp1.x - 1 || sp2.x == sp1.x + 1)
+					if ((sp2.x == sp1.x - 1 || sp2.x == sp1.x + 1)&& sp1.x == sp2.x)
 					{
 						checkAddNewPlayable(new PlayablePair(new Vector2(sp1.x, sp1.y), new Vector2(sp2.x, sp2.y)), pairs);
 					}
@@ -190,10 +187,8 @@ public class Driver {
 	
 	void gamePause() 
 	{
-		//Scanner sc = new Scanner(System.in);
 		System.out.println("Press ENTER to continue...");
 		sc.nextLine();
-		//sc.close();
 	}
 	
 	void makeMove(int turn) 
@@ -203,43 +198,65 @@ public class Driver {
 
 		if (turn%2 == 0) // White's turn
 		{	
-			System.out.print("X's turn\nPlease enter 2 consecutive vertical positions:\n1: ");
-			pos1 = sc.nextLine();
-			System.out.print("2: ");
-			pos2 = sc.nextLine();
+			do {
+				System.out.print("X's turn\nPlease enter 2 consecutive vertical positions:\n1: ");
+				pos1 = sc.nextLine();
+				System.out.print("2: ");
+				pos2 = sc.nextLine();
+			} while (!legalWhiteMove(pos1, pos2));
+			
+			char pos1Let = pos1.charAt(0);
+			char pos2Let = pos2.charAt(0);
+			int x1 = pos1Let - 65;
+			int x2 = pos2Let - 65;
+			int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
+			int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
+			gameBoard[x1][y1] = 'X';
+			gameBoard[x2][y2] = 'X';
 			
 			//check;
-			if (legalWhiteMove(pos1, pos2)) 
-			{
-				char pos1Let = pos1.charAt(0);
-				char pos2Let = pos2.charAt(0);
-				int x1 = pos1Let - 65;
-				int x2 = pos2Let - 65;
-				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
-				int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
-				gameBoard[x1][y1] = 'X';
-				gameBoard[x2][y2] = 'X';
-			}
+//			if (legalWhiteMove(pos1, pos2)) 
+//			{
+//				char pos1Let = pos1.charAt(0);
+//				char pos2Let = pos2.charAt(0);
+//				int x1 = pos1Let - 65;
+//				int x2 = pos2Let - 65;
+//				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
+//				int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
+//				gameBoard[x1][y1] = 'X';
+//				gameBoard[x2][y2] = 'X';
+//			}
 			
 		}
 		else // Black's turn
 		{
-			System.out.print("O's turn\nPlease enter 2 consecutive horizontal positions:\n1: ");
-			pos1 = sc.nextLine();
-			System.out.print("2: ");
-			pos2 = sc.nextLine();
+			do {
+				System.out.print("O's turn\nPlease enter 2 consecutive horizontal positions:\n1: ");
+				pos1 = sc.nextLine();
+				System.out.print("2: ");
+				pos2 = sc.nextLine();
+			} while (!legalBlackMove(pos1, pos2));
 			
-			if (legalBlackMove(pos1, pos2)) 
-			{
-				char pos1Let = pos1.charAt(0);
-				char pos2Let = pos2.charAt(0);
-				int x1 = pos1Let - 65;
-				int x2 = pos2Let - 65;
-				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
-				int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
-				gameBoard[x1][y1] = 'O';
-				gameBoard[x2][y2] = 'O';
-			}
+			char pos1Let = pos1.charAt(0);
+			char pos2Let = pos2.charAt(0);
+			int x1 = pos1Let - 65;
+			int x2 = pos2Let - 65;
+			int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
+			int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
+			gameBoard[x1][y1] = 'X';
+			gameBoard[x2][y2] = 'X';
+			
+//			if (legalBlackMove(pos1, pos2)) 
+//			{
+//				char pos1Let = pos1.charAt(0);
+//				char pos2Let = pos2.charAt(0);
+//				int x1 = pos1Let - 65;
+//				int x2 = pos2Let - 65;
+//				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
+//				int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
+//				gameBoard[x1][y1] = 'O';
+//				gameBoard[x2][y2] = 'O';
+//			}
 		}
 		
 		passTurn();
@@ -247,6 +264,9 @@ public class Driver {
 	
 	boolean legalBlackMove(String pos1, String pos2) 
 	{
+		if (pos1.length() != 2 || pos2.length() != 2)
+			return false;
+		
 		char pos1Let = pos1.charAt(0);
 		char pos2Let = pos2.charAt(0);
 		int x1 = pos1Let - 65;
@@ -254,11 +274,11 @@ public class Driver {
 		int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
 		int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
 		
-		if (x1 > 7 || x1 < 0 || x2 > 7 || x2 < 0)
+		if (x1 > _BoardX || x1 < 0 || x2 > _BoardX || x2 < 0)
 		{
 			return false;
 		}
-		if (y1 > 7 || y1 < 0 || y2 > 7 || y2 < 0)
+		if (y1 > _BoardY || y1 < 0 || y2 > _BoardY || y2 < 0)
 		{
 			return false;
 		}
@@ -273,7 +293,7 @@ public class Driver {
 			{
 				return false;
 			}
-			else if ((y1 == 7 && y2 != 6) || (y2 == 7 && y1 != 6))
+			else if ((y1 == _BoardY && y2 != _BoardY - 1) || (y2 == _BoardY && y1 != _BoardY - 1))
 			{
 				return false;
 			}			
@@ -288,8 +308,14 @@ public class Driver {
 		}
 	}
 	
+	/*
+	 * Holy if-else statements, batman!
+	 */
 	boolean legalWhiteMove(String pos1, String pos2) 
 	{
+		if (pos1.length() != 2 || pos2.length() != 2)
+			return false;
+		
 		char pos1Let = pos1.charAt(0);
 		char pos2Let = pos2.charAt(0);
 		int x1 = pos1Let - 65;
@@ -297,11 +323,11 @@ public class Driver {
 		int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
 		int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
 		
-		if (x1 > 7 || x1 < 0 || x2 > 7 || x2 < 0)
+		if (x1 > _BoardX || x1 < 0 || x2 > _BoardX || x2 < 0)
 		{
 			return false;
 		}
-		if (y1 > 7 || y1 < 0 || y2 > 7 || y2 < 0)
+		if (y1 > _BoardY || y1 < 0 || y2 > _BoardY || y2 < 0)
 		{
 			return false;
 		}
@@ -316,7 +342,7 @@ public class Driver {
 			{
 				return false;
 			}
-			else if ((x1 == 7 && x2 != 6) || (x2 == 7 && x1 != 6))
+			else if ((x1 == _BoardX && x2 != _BoardX - 1) || (x2 == _BoardX && x1 != _BoardX - 1))
 			{
 				return false;
 			}			

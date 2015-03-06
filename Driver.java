@@ -1,14 +1,14 @@
 import java.util.*;
 
 /*
- * TODO FUCKING REDO EVERYTHING WITH MVC, MOTHERFUCKAZZZZZZ
+ * TODO FUCKING REDO EVERYTHING WITH MVC
  */
 
 public class Driver {
 	private enum gameType {PVP, PVE};
 	
-	private static int _BoardX = 8;
-	private static int _BoardY = 8;
+	private static int _BoardX = 6;
+	private static int _BoardY = 6;
 	private static char[][] gameBoard;
 	
 	// When turn is even it's white's turn, when turn is odd it's black's turn
@@ -28,6 +28,10 @@ public class Driver {
 		{
 			this.x = x;
 			this.y = y;
+		}
+		
+		public String toString() {
+			return x + ", " + y;
 		}
 	}
 	
@@ -64,10 +68,22 @@ public class Driver {
 	{
 		Driver d = new Driver();
 		
-		while (d.checkIfCanPlay())
+		while (d.checkIfCanPlay(turn+1))
 		{
 			d.printBoard();
 			d.makeMove(turn);
+
+		}
+		
+		d.printBoard();
+		
+		if (turn % 2 == 0) 
+		{
+			System.out.println("O's win!!");
+		}
+		else
+		{
+			System.out.println("X's win!!");
 		}
 		d.exit();
 	}
@@ -78,7 +94,7 @@ public class Driver {
 		{
 			PlayablePair cur = (PlayablePair) pairs.get(i);
 			
-			if (cur.containsVector(p.spot1) || cur.containsVector(p.spot2)) //duplicate spot, don't add it
+			if (cur.containsVector(p.spot1) && cur.containsVector(p.spot2)) //duplicate spot, don't add it
 			{
 				return;
 			}
@@ -87,7 +103,7 @@ public class Driver {
 		pairs.add(p);
 	}
 	
-	boolean checkIfCanPlay()
+	boolean checkIfCanPlay(int specTurn)
 	{
 		ArrayList list = new ArrayList<Vector2>();
 		
@@ -96,7 +112,7 @@ public class Driver {
 			for (int j = 0; j < _BoardY; j++) 
 			{
 				Vector2 vec = new Vector2(i,j);
-				
+
 				if (gameBoard[i][j] == ' ' && !list.contains(vec))
 				{
 					list.add(vec);
@@ -106,7 +122,7 @@ public class Driver {
 		
 		ArrayList pairs = new ArrayList<PlayablePair>();
 		
-		if (turn % 2 == 0) // white's turn, check all spots
+		if (specTurn % 2 == 0) // white's turn, check all spots
 		{
 			for (int i = 0; i < list.size(); i++)
 			{
@@ -131,7 +147,7 @@ public class Driver {
 					Vector2 sp1 = (Vector2) list.get(i);
 					Vector2 sp2 = (Vector2) list.get(j);
 					
-					if ((sp2.x == sp1.x - 1 || sp2.x == sp1.x + 1)&& sp1.x == sp2.x)
+					if ((sp2.x == sp1.x - 1 || sp2.x == sp1.x + 1)&& sp1.y == sp2.y)
 					{
 						checkAddNewPlayable(new PlayablePair(new Vector2(sp1.x, sp1.y), new Vector2(sp2.x, sp2.y)), pairs);
 					}
@@ -139,7 +155,8 @@ public class Driver {
 			}
 		}
 		
-		printPlays(pairs);
+		
+		//printPlays(pairs);
 		
 		return pairs.size() > 0;
 	}
@@ -157,7 +174,7 @@ public class Driver {
 		
 		int response;
 		
-		System.out.println("Welcome to Ganja-Hoes!!\n");
+		System.out.println("Welcome!!\n");
 		
 		System.out.println("Would you like to:\n1. Play against another person\n2. Play against the computer");
 		System.out.print("Response: ");
@@ -199,164 +216,168 @@ public class Driver {
 		if (turn%2 == 0) // White's turn
 		{	
 			do {
-				System.out.print("X's turn\nPlease enter 2 consecutive vertical positions:\n1: ");
+				System.out.print("X's turn\nPlease enter your next move\n1: ");
 				pos1 = sc.nextLine();
-				System.out.print("2: ");
-				pos2 = sc.nextLine();
-			} while (!legalWhiteMove(pos1, pos2));
+			} while (!legalWhiteMove(pos1));
 			
 			char pos1Let = pos1.charAt(0);
-			char pos2Let = pos2.charAt(0);
+			//char pos2Let = pos2.charAt(0);
 			int x1 = pos1Let - 65;
-			int x2 = pos2Let - 65;
+			//int x2 = pos2Let - 65;
 			int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
-			int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
+			//int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
 			gameBoard[x1][y1] = 'X';
-			gameBoard[x2][y2] = 'X';
+			if (x1-1 > 0 && gameBoard[x1-1][y1] == ' ')
+			{
+				gameBoard[x1-1][y1] = 'X';
+			}
+			else if (x1+1 < _BoardX && gameBoard[x1+1][y1] == ' ')
+			{
+				gameBoard[x1+1][y1] = 'X';
+			}
+			else
+			{
+				System.err.println("ERROR: illegal move");
+			}
 			
-			//check;
-//			if (legalWhiteMove(pos1, pos2)) 
-//			{
-//				char pos1Let = pos1.charAt(0);
-//				char pos2Let = pos2.charAt(0);
-//				int x1 = pos1Let - 65;
-//				int x2 = pos2Let - 65;
-//				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
-//				int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
-//				gameBoard[x1][y1] = 'X';
-//				gameBoard[x2][y2] = 'X';
-//			}
 			
 		}
 		else // Black's turn
 		{
 			do {
-				System.out.print("O's turn\nPlease enter 2 consecutive horizontal positions:\n1: ");
-				pos1 = sc.nextLine();
-				System.out.print("2: ");
-				pos2 = sc.nextLine();
-			} while (!legalBlackMove(pos1, pos2));
+				System.out.print("O's turn\nPlease enter your next move:\n1: ");
+				pos1 = sc.nextLine();;
+			} while (!legalBlackMove(pos1));
 			
 			char pos1Let = pos1.charAt(0);
-			char pos2Let = pos2.charAt(0);
 			int x1 = pos1Let - 65;
-			int x2 = pos2Let - 65;
 			int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
-			int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
-			gameBoard[x1][y1] = 'X';
-			gameBoard[x2][y2] = 'X';
+
+			gameBoard[x1][y1] = 'O';
+			if (y1+1 < _BoardY && gameBoard[x1][y1+1] == ' ')
+			{
+				gameBoard[x1][y1+1] = 'O';
+			}
+			else if (y1-1 > 0 && gameBoard[x1][y1-1] == ' ')
+			{
+				gameBoard[x1][y1-1] = 'O';
+			}
+			else
+			{
+				System.err.println("ERROR: illegal move");
+			}
 			
-//			if (legalBlackMove(pos1, pos2)) 
-//			{
-//				char pos1Let = pos1.charAt(0);
-//				char pos2Let = pos2.charAt(0);
-//				int x1 = pos1Let - 65;
-//				int x2 = pos2Let - 65;
-//				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
-//				int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
-//				gameBoard[x1][y1] = 'O';
-//				gameBoard[x2][y2] = 'O';
-//			}
 		}
 		
 		passTurn();
 	}
 	
-	boolean legalBlackMove(String pos1, String pos2) 
+	
+	boolean legalWhiteMove(String pos1) 
 	{
-		if (pos1.length() != 2 || pos2.length() != 2)
+		if (pos1.length() != 2)
 			return false;
 		
 		char pos1Let = pos1.charAt(0);
-		char pos2Let = pos2.charAt(0);
+		//char pos2Let = pos2.charAt(0);
 		int x1 = pos1Let - 65;
-		int x2 = pos2Let - 65;
+		//int x2 = pos2Let - 65;
 		int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
-		int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
+		//int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
 		
-		if (x1 > _BoardX || x1 < 0 || x2 > _BoardX || x2 < 0)
+		if (x1 > _BoardX || x1 < 0) // The X value is off the board
 		{
 			return false;
 		}
-		if (y1 > _BoardY || y1 < 0 || y2 > _BoardY || y2 < 0)
+		if (y1 > _BoardY || y1 < 0) // The Y value is off the board
 		{
 			return false;
+		}
+		if (gameBoard[x1][y1] != ' ') // The position isn't open
+		{
+			return false;
+		}
+		if (x1 != 0 && x1 != _BoardX - 1) // The positions above and below the invalid
+		{
+			if (gameBoard[x1+1][y1] != ' ' && gameBoard[x1-1][y1] != ' ')
+			{
+				return false;
+			}
+		}
+		if (x1 == 0) 
+		{
+			if (gameBoard[x1 +1][y1] != ' ') 
+			{
+				return false;
+			}
+		}
+		else if (x1 ==  _BoardX - 1) 
+		{
+			if (gameBoard[x1-1][y1] != ' ')
+			{
+				return false;
+			}
 		}
 		
-		if (gameBoard[x1][y1] != ' ' || gameBoard[x2][y2] != ' ' || x2 != x1) 
-		{
-			return false;
-		}
-		else 
-		{
-			if ((y1 == 0 && y2 != 1) || (y2 == 0 && y1 != 1)) 
-			{
-				return false;
-			}
-			else if ((y1 == _BoardY && y2 != _BoardY - 1) || (y2 == _BoardY && y1 != _BoardY - 1))
-			{
-				return false;
-			}			
-			else if (Math.abs(y1 - y2) > 1) 
-			{
-				return false;
-			}
-			else 
-			{
-				return true;
-			}
-		}
+		
+		return true;
 	}
+
 	
 	/*
 	 * Holy if-else statements, batman!
 	 */
-	boolean legalWhiteMove(String pos1, String pos2) 
+	boolean legalBlackMove(String pos1) 
 	{
-		if (pos1.length() != 2 || pos2.length() != 2)
+		if (pos1.length() != 2)
 			return false;
 		
 		char pos1Let = pos1.charAt(0);
-		char pos2Let = pos2.charAt(0);
+		//char pos2Let = pos2.charAt(0);
 		int x1 = pos1Let - 65;
-		int x2 = pos2Let - 65;
+		//int x2 = pos2Let - 65;
 		int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
-		int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
+		//int y2 = Integer.parseInt(pos2.charAt(1) + "") - 1;
 		
-		if (x1 > _BoardX || x1 < 0 || x2 > _BoardX || x2 < 0)
+		if (x1 > _BoardX || x1 < 0) // The X value is off the board
 		{
 			return false;
 		}
-		if (y1 > _BoardY || y1 < 0 || y2 > _BoardY || y2 < 0)
+		if (y1 > _BoardY || y1 < 0) // The Y value is off the board
 		{
 			return false;
+		}
+		if (gameBoard[x1][y1] != ' ') // The position isn't open
+		{
+			return false;
+		}
+		if (y1 != 0 && y1 != _BoardY - 1) // The positions above and below the invalid
+		{
+			if (gameBoard[x1][y1+1] != ' ' && gameBoard[x1][y1-1] != ' ')
+			{
+				return false;
+			}
+		}
+		if (y1 == 0) 
+		{
+			if (gameBoard[x1][y1+1] != ' ') 
+			{
+				return false;
+			}
+		}
+		else if (y1 ==  _BoardY - 1) 
+		{
+			if (gameBoard[x1][y1-1] != ' ')
+			{
+				return false;
+			}
 		}
 		
-		if (gameBoard[x1][y1] != ' ' || gameBoard[x2][y2] != ' ' || y2 != y1) 
-		{
-			return false;
-		}
-		else 
-		{
-			if ((x1 == 0 && x2 != 1) || (x2 == 0 && x1 != 1)) 
-			{
-				return false;
-			}
-			else if ((x1 == _BoardX && x2 != _BoardX - 1) || (x2 == _BoardX && x1 != _BoardX - 1))
-			{
-				return false;
-			}			
-			else if (Math.abs(x1 - x2) > 1) 
-			{
-				return false;
-			}
-			else 
-			{
-				return true;
-			}
-		}
+		
+		return true;
 	}
 	
+
 	/*
 	 * Initializes the game board to the given dimensions
 	*/
@@ -377,7 +398,11 @@ public class Driver {
 	 */
 	void printBoard()
 	{
-		System.out.printf("%-5c%-5d%-5d%-5d%-5d%-5d%-5d%-5d%-5d%n", ' ', 1, 2, 3, 4, 5, 6, 7, 8);
+		System.out.printf("%-5c", ' ');
+		for (int i = 1; i <= _BoardY; i++) {
+			System.out.printf("%-5d", i);
+		}
+		System.out.println();
 		for (int i = 0; i < _BoardX; i++)
 		{
 			System.out.printf("%-5c", (char)(i+65));

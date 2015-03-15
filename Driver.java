@@ -13,13 +13,14 @@ public class Driver {
 	{		
 		intro();
 		while (Gameboard.getInstance().checkIfCanPlay(Gameboard.getInstance().getTurn() + 1))
-		{
+		{			
 			Gameboard.getInstance().printBoard();
 			Gameboard.getInstance().makeMove(Gameboard.getInstance().getTurn());
 
 		}
 		
 		Gameboard.getInstance().printBoard();
+		
 		
 		if (Gameboard.getInstance().getTurn() % 2 == 0) 
 		{

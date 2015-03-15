@@ -134,7 +134,8 @@ public class Gameboard {
 		} 
 		catch(Exception e)
 		{
-			System.err.println(e);
+			System.out.println("Please enter a valid position");
+			//System.err.println(e);
 		}
 		
 		int x1 = c.getX();
@@ -190,7 +191,8 @@ public class Gameboard {
 		} 
 		catch(Exception e)
 		{
-			System.err.println(e);
+			System.out.println("Please enter a valid position");
+			//System.err.println(e);
 		}
 		
 		int x1 = c.getX();
@@ -363,7 +365,7 @@ public class Gameboard {
 		char[][] gb = new char[_BoardX][_BoardY];
 		for (int i = 0; i < gb.length; i++) 
 		{
-			for (int j = 0; j < gb[i].length; i++) 
+			for (int j = 0; j < gb[i].length; j++) 
 			{
 				gb[i][j] = gameBoard[i][j];
 			}
@@ -374,43 +376,5 @@ public class Gameboard {
 	public void setGameType(gameType gt) 
 	{
 		playMode = gt;
-	}
-}
-
-//class Vector2
-//{
-//	public int x;
-//	public int y;
-//	
-//	public Vector2(int x, int y)
-//	{
-//		this.x = x;
-//		this.y = y;
-//	}
-//	
-//	public String toString() {
-//		return x + ", " + y;
-//	}
-//}
-
-class PlayablePair
-{
-	public Coord spot1;
-	public Coord spot2;
-	
-	public PlayablePair(Coord v1, Coord v2)
-	{
-		spot1 = v1;
-		spot2 = v2;
-	}
-	
-	public boolean containsVector(Coord vec)
-	{
-		return (spot1 == vec || spot2 == vec);
-	}
-	
-	public String toString()
-	{
-		return spot1.getX() + ", " + spot1.getY() + " and " + spot2.getX() + ", " + spot2.getY();
 	}
 }

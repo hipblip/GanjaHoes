@@ -63,4 +63,11 @@ public class Coord {
 		return newCoord;
 	}
 	
+	public String toString() 
+	{
+		char letter = (char)(x + 65);
+		int num = y + 1;
+		return letter + "" + num;
+	}
+	
 }

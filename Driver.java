@@ -12,7 +12,7 @@ public class Driver {
 	public static void main(String[] args) 
 	{		
 		intro();
-		while (Gameboard.getInstance().checkIfCanPlay(Gameboard.getInstance().getTurn() + 1))
+		while (PlayablePair.checkIfCanPlay(Gameboard.getInstance().getTurn() + 1))
 		{			
 			Gameboard.getInstance().printBoard();
 			Gameboard.getInstance().makeMove(Gameboard.getInstance().getTurn());

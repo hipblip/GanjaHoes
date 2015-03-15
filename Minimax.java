@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Minimax {
 	
@@ -6,7 +7,7 @@ public class Minimax {
 	
 	private Coord bestMove;
 	
-	
+	private Stack<Coord> simulatedPlays = new Stack<Coord>();
 	
 	public Minimax(int depth) 
 	{
@@ -19,16 +20,20 @@ public class Minimax {
 		
 		if (depth == 0 || node.children.size() == 0) 
 		{
+			
 			return node.heuristicValue;
 		}
 		
-		if (maximizingPlayer) 
+		if (maximizingPlayer) // Playing O's
 		{
 			v = Integer.MIN_VALUE;
 			for (Node child : node.children)
 			{
 				//Check if child will produce a playable pair
-				//If it does, remove both coordinates from list of available moves.
+				//If it does, remove both coordinates from list of available moves and make recursive call
+				//Otherwise continue with loop
+				
+				
 				v = Math.max(v, alphaBeta(child, alpha, beta, depth - 1, false));
 				alpha = Math.max(alpha, v);
 				if (beta <= alpha)
@@ -38,7 +43,7 @@ public class Minimax {
 			}
 			return v;
 		}
-		else
+		else // Playing X's
 		{
 			v = Integer.MAX_VALUE;
 			for (Node child : node.children) 

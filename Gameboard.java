@@ -283,6 +283,15 @@ public class Gameboard {
 		return turn;
 	}
 	
+	public char getCharAt(int x, int y) throws Exception
+	{
+		if (x < 0 || y < 0 || x > _BoardX || y > _BoardY)
+		{
+			throw new Exception();
+		}
+		return gameBoard[x][y];
+	}
+	
 	public char[][] getBoard() 
 	{
 		char[][] gb = new char[_BoardX][_BoardY];

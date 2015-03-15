@@ -1,9 +1,5 @@
 import java.util.*;
 
-/*
- * TODO FUCKING REDO EVERYTHING WITH MVC
- */
-
 public class Driver {
 	
 	// When turn is even it's white's turn, when turn is odd it's black's turn

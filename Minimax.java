@@ -7,11 +7,39 @@ public class Minimax {
 	
 	private Coord bestMove;
 	
-	private Stack<Coord> simulatedPlays = new Stack<Coord>();
+	private ArrayList<PlayablePair> simulatedPlays = new ArrayList<PlayablePair>();
 	
 	public Minimax(int depth) 
 	{
 		depthOfCheck = depth;
+	}
+	
+	boolean isValidCoord(Coord c, boolean maximizingPlayer, Gameboard board)
+	{
+		//Gameboard board = Gameboard.getInstance();
+		
+		if (maximizingPlayer)
+		{
+			try
+			{
+				boolean valid = (board.getCharAt(c.getX() - 1, c.getY()) == ' ') || (board.getCharAt(c.getX() + 1, c.getY()) == ' ');
+				
+				return valid;
+			}
+			catch (Exception e){}
+		}
+		else
+		{
+			try
+			{
+				boolean valid = (board.getCharAt(c.getX(), c.getY() - 1) == ' ') || (board.getCharAt(c.getX(), c.getY() + 1) == ' ');
+				
+				return valid;
+			}
+			catch (Exception e){}
+		}
+		
+		return false;
 	}
 	
 	public int alphaBeta(Node node, int alpha, int beta, int depth, boolean maximizingPlayer) // Max should always be O's when playing against a person
@@ -74,6 +102,7 @@ public class Minimax {
 				}
 			}
 		}
+		
 		return moves;
 	}
 	

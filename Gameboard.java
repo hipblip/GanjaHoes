@@ -126,7 +126,7 @@ public class Gameboard {
 		passTurn();
 	}
 	
-	public boolean legalWhiteMove(String pos1, char[][] gb) 
+	public static boolean legalWhiteMove(String pos1, char[][] gb) 
 	{
 		Coord c = new Coord();
 		try {
@@ -140,11 +140,11 @@ public class Gameboard {
 		int x1 = c.getX();
 		int y1 = c.getY();
 		
-		if (x1 > _BoardX || x1 < 0) // The X value is off the board
+		if (x1 > instance._BoardX || x1 < 0) // The X value is off the board
 		{
 			return false;
 		}
-		if (y1 > _BoardY || y1 < 0) // The Y value is off the board
+		if (y1 > instance._BoardY || y1 < 0) // The Y value is off the board
 		{
 			return false;
 		}
@@ -152,7 +152,7 @@ public class Gameboard {
 		{
 			return false;
 		}
-		if (x1 != 0 && x1 != _BoardX - 1) // The positions above and below the invalid
+		if (x1 != 0 && x1 != instance._BoardX - 1) // The positions above and below the invalid
 		{
 			if (gb[x1+1][y1] != ' ' && gb[x1-1][y1] != ' ')
 			{
@@ -166,7 +166,7 @@ public class Gameboard {
 				return false;
 			}
 		}
-		else if (x1 ==  _BoardX - 1) 
+		else if (x1 ==  instance._BoardX - 1) 
 		{
 			if (gb[x1-1][y1] != ' ')
 			{
@@ -181,7 +181,7 @@ public class Gameboard {
 	/*
 	 * Holy if-else statements, batman!
 	 */
-	public boolean legalBlackMove(String pos1, char[][] gb) 
+	public static boolean legalBlackMove(String pos1, char[][] gb) 
 	{
 		Coord c = new Coord();
 		
@@ -196,11 +196,11 @@ public class Gameboard {
 		int x1 = c.getX();
 		int y1 = c.getY();
 		
-		if (x1 > _BoardX || x1 < 0) // The X value is off the board
+		if (x1 > instance._BoardX || x1 < 0) // The X value is off the board
 		{
 			return false;
 		}
-		if (y1 > _BoardY || y1 < 0) // The Y value is off the board
+		if (y1 > instance._BoardY || y1 < 0) // The Y value is off the board
 		{
 			return false;
 		}
@@ -208,7 +208,7 @@ public class Gameboard {
 		{
 			return false;
 		}
-		if (y1 != 0 && y1 != _BoardY - 1) // The positions above and below the invalid
+		if (y1 != 0 && y1 != instance._BoardY - 1) // The positions above and below the invalid
 		{
 			if (gb[x1][y1+1] != ' ' && gb[x1][y1-1] != ' ')
 			{
@@ -222,7 +222,7 @@ public class Gameboard {
 				return false;
 			}
 		}
-		else if (y1 ==  _BoardY - 1) 
+		else if (y1 ==  instance._BoardY - 1) 
 		{
 			if (gb[x1][y1-1] != ' ')
 			{

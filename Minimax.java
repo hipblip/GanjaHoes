@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Stack;
 
 public class Minimax {
@@ -127,13 +128,14 @@ public class Minimax {
 				
 				if (Minimax.isValidCoord(child.getCoord(), maximizingPlayer, Gameboard.getInstance().getBoard()))
 				{
-					
+					child.simulatedPairs = node.duplicateSimPairs();
+					child.simulatedPairs.add(getPlayablePair(child.getCoord(), maximizingPlayer, Gameboard.getInstance()));
 				} 
 				else 
 				{
 					continue;
 				}
-				
+
 				v = Math.max(v, alphaBeta(child, alpha, beta, depth - 1, false));				
 				alpha = Math.max(alpha, v);
 				if (beta <= alpha)
@@ -151,7 +153,8 @@ public class Minimax {
 				
 				if (Minimax.isValidCoord(child.getCoord(),  !maximizingPlayer, Gameboard.getInstance().getBoard()))
 				{
-					
+					child.simulatedPairs = node.duplicateSimPairs();
+					child.simulatedPairs.add(getPlayablePair(child.getCoord(), !maximizingPlayer, Gameboard.getInstance()));
 				}
 				else
 				{
@@ -169,10 +172,10 @@ public class Minimax {
 		}
 	}
 	
-	public static ArrayList<Coord> availableMoves(char[][] currentBoard) {
+	public static ArrayList<PlayablePair> availableMoves(char[][] currentBoard, Node node) {
 		// getBoard returns a deep copy of the gameboard with O(n^2) so this is done 
 		// so it's only evaluated once.
-		ArrayList<Coord> moves = new ArrayList<Coord>();
+		ArrayList<PlayablePair> moves = new ArrayList<PlayablePair>();
 		
 		for (int i = 0; i < currentBoard.length; i++) 
 		{
@@ -180,9 +183,14 @@ public class Minimax {
 			{
 				if (currentBoard[i][j] == ' ')
 				{
-					moves.add(new Coord(i, j));
+					//moves.add(new PlayablePair(i, j));
 				}
 			}
+		}
+		
+		for (int i = 0; i < node.simulatedPairs.size(); i++) 
+		{
+			moves.removeAll(Collections.singleton(node.simulatedPairs.get(i)));
 		}
 		
 		return moves;

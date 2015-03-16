@@ -18,13 +18,21 @@ public class Node {
 	{
 		coord = null;
 		parent = null;
-		for (int i = 0; i < Minimax.availableMoves(Gameboard.getInstance().getBoard()).size(); i++)
-		{
-			children.add(new Node(Minimax.availableMoves(Gameboard.getInstance().getBoard()).get(i)));
-		}
+		//for (int i = 0; i < Minimax.availableMoves(Gameboard.getInstance().getBoard()).size(); i++)
+		//{
+		//	children.add(new Node(Minimax.availableMoves(Gameboard.getInstance().getBoard()).get(i)));
+		//}
 	}
 	
-	
+	public ArrayList<PlayablePair> duplicateSimPairs() 
+	{
+		ArrayList<PlayablePair> p = new ArrayList<PlayablePair>();
+		for (int i = 0; i < simulatedPairs.size(); i++)
+		{
+			p.add(simulatedPairs.get(i));
+		}
+		return p;
+	}
 	
 	public void setParent(Node p)
 	{

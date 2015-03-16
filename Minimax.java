@@ -111,16 +111,21 @@ public class Minimax {
 				
 		for (PlayablePair pair : childPairs)
 		{
+			
 			node.children.add(PlayablePair.pairToNode(pair)[0]);
 			node.children.add(PlayablePair.pairToNode(pair)[1]);
+			//node.printChildren();
+			//System.out.println(node.children.size());
 		}
 		
 		int v = -1;		
 		if (depth == 0 || node.children.size() == 0) 
 		{
 			//return an actual heuristic, brotendo
-			//return node.heuristicValue;
-			node.heuristicValue = Minimax.heuristicFunction(node);
+
+			//node.heuristicValue = Minimax.heuristicFunction(node);
+			node.heuristicValue = (int)Math.random() * 100;
+			
 			return node.heuristicValue;
 		}
 		
@@ -136,6 +141,7 @@ public class Minimax {
 				{
 					child.simulatedPairs = node.duplicateSimPairs();
 					child.simulatedPairs.add(getPlayablePair(child.getCoord(), maximizingPlayer, Gameboard.getInstance()));
+					child.removeNullPairs();
 				} 
 				else 
 				{
@@ -147,7 +153,7 @@ public class Minimax {
 				if (v >= alpha)
 				{
 					alpha = v;
-					bestMove = node;
+					bestMove = child;
 				}
 				if (beta <= alpha)
 				{
@@ -155,7 +161,7 @@ public class Minimax {
 				}
 				
 			}
-			node.simulatedPairs.remove(node.simulatedPairs.size()-1);
+
 			return v;
 		}
 		else // Playing X's
@@ -168,6 +174,7 @@ public class Minimax {
 				{
 					child.simulatedPairs = node.duplicateSimPairs();
 					child.simulatedPairs.add(getPlayablePair(child.getCoord(), !maximizingPlayer, Gameboard.getInstance()));
+					child.removeNullPairs();
 				}
 				else
 				{
@@ -181,7 +188,7 @@ public class Minimax {
 					break;
 				}
 			}
-			node.simulatedPairs.remove(node.simulatedPairs.size()-1);
+
 			return v;
 		}
 	}
@@ -233,7 +240,7 @@ public class Minimax {
 				{
 					if (Gameboard.getInstance().getCharAt(i, j) == ' ')
 						{
-						if (Gameboard.getInstance().getCharAt(i, j + 1) != ' ' && Gameboard.getInstance().getCharAt(i, j - 1) != ' ')
+						if (Gameboard.getInstance().getCharAt(i+1, j) != ' ' && Gameboard.getInstance().getCharAt(i-1, j) != ' ')
 						{
 							count++;
 						}
@@ -241,15 +248,15 @@ public class Minimax {
 						{
 							for (PlayablePair p : node.simulatedPairs)
 							{
-								if (Gameboard.getInstance().getCharAt(i,  j + 1) != ' ' && 
-										(Gameboard.getInstance().getCharAt(i, j - 1) == Gameboard.getInstance().getCharAt(p.spot1.getX(),  p.spot1.getY()) ||
-										 Gameboard.getInstance().getCharAt(i, j - 1) == Gameboard.getInstance().getCharAt(p.spot2.getX(),  p.spot2.getY()))) 
+								if (Gameboard.getInstance().getCharAt(i+1,  j) != ' ' && 
+										(Gameboard.getInstance().getCharAt(i-1, j) == Gameboard.getInstance().getCharAt(p.spot1.getX(),  p.spot1.getY()) ||
+										 Gameboard.getInstance().getCharAt(i - 1, j) == Gameboard.getInstance().getCharAt(p.spot2.getX(),  p.spot2.getY()))) 
 								{
 									count++;
 								}
-								else if (Gameboard.getInstance().getCharAt(i,  j - 1) != ' ' && 
-										(Gameboard.getInstance().getCharAt(i, j + 1) == Gameboard.getInstance().getCharAt(p.spot1.getX(),  p.spot1.getY()) ||
-										 Gameboard.getInstance().getCharAt(i, j + 1) == Gameboard.getInstance().getCharAt(p.spot2.getX(),  p.spot2.getY())))
+								else if (Gameboard.getInstance().getCharAt(i -1,  j) != ' ' && 
+										(Gameboard.getInstance().getCharAt(i + 1, j) == Gameboard.getInstance().getCharAt(p.spot1.getX(),  p.spot1.getY()) ||
+										 Gameboard.getInstance().getCharAt(i + 1, j) == Gameboard.getInstance().getCharAt(p.spot2.getX(),  p.spot2.getY())))
 								{
 									count++;
 								}
@@ -261,11 +268,11 @@ public class Minimax {
 				catch (Exception e) // index was out of bounds
 				{
 					//System.out.println(e);
-					if (j + 1 > Gameboard.getInstance().getBoardY()) // Upper was out of bounds
+					if (i + 1 > Gameboard.getInstance().getBoardY()) // Upper was out of bounds
 					{
 						try 
 						{
-							if (Gameboard.getInstance().getCharAt(i,  j - 1) != ' ')
+							if (Gameboard.getInstance().getCharAt(i - 1,  j) != ' ')
 							{
 								count++;
 							}
@@ -273,8 +280,8 @@ public class Minimax {
 							{
 								for (PlayablePair p : node.simulatedPairs)
 								{
-									if (Gameboard.getInstance().getCharAt(p.spot1.getX(), p.spot1.getY()) == Gameboard.getInstance().getCharAt(i,  j - 1) ||
-											Gameboard.getInstance().getCharAt(p.spot2.getX(), p.spot2.getY()) == Gameboard.getInstance().getCharAt(i, i - 1))
+									if (Gameboard.getInstance().getCharAt(p.spot1.getX(), p.spot1.getY()) == Gameboard.getInstance().getCharAt(i - 1,  j) ||
+											Gameboard.getInstance().getCharAt(p.spot2.getX(), p.spot2.getY()) == Gameboard.getInstance().getCharAt(i - 1, j))
 									{
 										count++;
 									}
@@ -287,11 +294,11 @@ public class Minimax {
 							System.out.println("If you got here, there's something wrong with the heuristic function :: Upper bound");
 						}
 					} 
-					else if (j - 1 < 0) //Lower bound
+					else if (i - 1 < 0) //Lower bound
 					{
 						try 
 						{
-							if (Gameboard.getInstance().getCharAt(i,  j + 1) != ' ')
+							if (Gameboard.getInstance().getCharAt(i + 1,  j) != ' ')
 							{
 								count++;
 							}
@@ -299,8 +306,8 @@ public class Minimax {
 							{
 								for (PlayablePair p : node.simulatedPairs)
 								{
-									if (Gameboard.getInstance().getCharAt(p.spot1.getX(), p.spot1.getY()) == Gameboard.getInstance().getCharAt(i,  j + 1) ||
-											Gameboard.getInstance().getCharAt(p.spot2.getX(), p.spot2.getY()) == Gameboard.getInstance().getCharAt(i, i + 1))
+									if (Gameboard.getInstance().getCharAt(p.spot1.getX(), p.spot1.getY()) == Gameboard.getInstance().getCharAt(i + 1,  j) ||
+											Gameboard.getInstance().getCharAt(p.spot2.getX(), p.spot2.getY()) == Gameboard.getInstance().getCharAt(i + 1, j))
 									{
 										count++;
 									}

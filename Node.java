@@ -28,6 +28,25 @@ public class Node {
 		//}
 	}
 	
+	public void printChildren()
+	{
+		for (int i = 0; i < children.size(); i++) 
+		{
+			System.out.println(children.get(i));
+		}
+	}
+	
+	public void removeNullPairs() 
+	{
+		for (int i = 0; i < simulatedPairs.size(); i++)
+		{
+			if (simulatedPairs.get(i) == null)
+			{
+				simulatedPairs.remove(i);
+			}
+		}
+	}
+	
 	public ArrayList<PlayablePair> duplicateSimPairs() 
 	{
 		ArrayList<PlayablePair> p = new ArrayList<PlayablePair>();

@@ -96,7 +96,7 @@ public class Gameboard {
 			}
 			else
 			{
-				System.err.println("ERROR: illegal move");
+				System.out.println("ERROR: illegal move");
 			}
 			
 			
@@ -112,7 +112,9 @@ public class Gameboard {
 			else if (playMode == gameType.PVE)
 			{
 				//System.out.println("heuristic");
+				lastMove.setY(lastMove.getY()+2);
 				ai.alphaBeta(new Node(lastMove), Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), true);
+				
 				pos1 = ai.getBestMove().getCoord().toString();
 				
 			}
@@ -136,7 +138,7 @@ public class Gameboard {
 			}
 			else
 			{
-				System.err.println("ERROR: illegal move");
+				System.out.println("ERROR: illegal move");
 			}			
 		}
 		

@@ -5,6 +5,7 @@ public class Node {
 	
 	Node parent;
 	ArrayList<Node> children;
+	ArrayList<PlayablePair> simulatedPairs;
 	
 	int heuristicValue;
 	
@@ -22,6 +23,8 @@ public class Node {
 			children.add(new Node(Minimax.availableMoves(Gameboard.getInstance().getBoard()).get(i)));
 		}
 	}
+	
+	
 	
 	public void setParent(Node p)
 	{

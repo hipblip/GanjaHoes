@@ -7,14 +7,14 @@ public class Minimax {
 	
 	private Coord bestMove;
 	
-	private ArrayList<PlayablePair> simulatedPlays = new ArrayList<PlayablePair>();
+	private Stack<PlayablePair> simulatedPlays = new Stack<PlayablePair>();
 	
 	public Minimax(int depth) 
 	{
 		depthOfCheck = depth;
 	}
 	
-	boolean isValidCoord(Coord c, boolean maximizingPlayer, Gameboard board)
+	static boolean isValidCoord(Coord c, boolean maximizingPlayer, char[][] board)
 	{
 		//Gameboard board = Gameboard.getInstance();
 		
@@ -22,24 +22,54 @@ public class Minimax {
 		{
 			try
 			{
-				boolean valid = (board.getCharAt(c.getX() - 1, c.getY()) == ' ') || (board.getCharAt(c.getX() + 1, c.getY()) == ' ');
+				//boolean valid = (Gameboard.getInstance().getCharAt(c.getX() - 1, c.getY()) == ' ') || (Gameboard.getInstance().getCharAt(c.getX() + 1, c.getY()) == ' ');
+				boolean valid = (board[c.getX() - 1][c.getY()] == ' ' || board[c.getX() + 1][c.getY()] == ' ');
 				
 				return valid;
 			}
-			catch (Exception e){}
+			catch (Exception e) // If x is out of bounds catch the exception and check if the other direction is valid
+			{
+				if (c.getX() - 1 < 0 && board[c.getX() + 1][c.getY()] != ' ')
+				{
+					return false; 
+				}
+				else if (c.getX() + 1 >= Gameboard.getInstance().getBoardX() && board[c.getX() - 1][c.getY()] != ' ') 
+				{
+					return false;
+				}
+				else 
+				{
+					return true;
+				}
+			}
 		}
 		else
 		{
 			try
 			{
-				boolean valid = (board.getCharAt(c.getX(), c.getY() - 1) == ' ') || (board.getCharAt(c.getX(), c.getY() + 1) == ' ');
+				//boolean valid = (Gameboard.getInstance().getCharAt(c.getX(), c.getY() - 1) == ' ') || (Gameboard.getInstance().getCharAt(c.getX(), c.getY() + 1) == ' ');
+				boolean valid = (board[c.getX()][c.getY() - 1] == ' ' || board[c.getX()][c.getY() + 1] == ' ');
 				
 				return valid;
 			}
-			catch (Exception e){}
+			catch (Exception e)
+			{
+				if (c.getY() - 1 < 0 && board[c.getX()][c.getY() + 1] != ' ')
+				{
+					return false;
+				}
+				else if (c.getY() + 1 >= Gameboard.getInstance().getBoardY() && board[c.getX()][c.getY() - 1] != ' ')
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
 		}
 		
-		return false;
+		//return false;
 	}
 	
 	PlayablePair getPlayablePair(Coord c, boolean maximizingPlayer, Gameboard board)
@@ -48,7 +78,7 @@ public class Minimax {
 		{
 			if (maximizingPlayer)
 			{
-				if (board.getCharAt(c.getX() + 1, c.getY()) == ' ')
+				if (Gameboard.getInstance().getCharAt(c.getX() + 1, c.getY()) == ' ')
 				{
 					return new PlayablePair(c, new Coord(c.getX() + 1, c.getY()));
 				}
@@ -59,7 +89,7 @@ public class Minimax {
 			}
 			else
 			{
-				if (board.getCharAt(c.getX(), c.getY() - 1) == ' ')
+				if (Gameboard.getInstance().getCharAt(c.getX(), c.getY() - 1) == ' ')
 				{
 					return new PlayablePair(c, new Coord(c.getX(), c.getY() - 1));
 				}
@@ -72,8 +102,12 @@ public class Minimax {
 		catch (Exception e){ return null; }
 	}
 	
+	
+	
 	public int alphaBeta(Node node, int alpha, int beta, int depth, boolean maximizingPlayer) // Max should always be O's when playing against a person
 	{
+		//TODO get all the children of the current node
+				
 		int v = -1;
 		
 		if (depth == 0 || node.children.size() == 0) 
@@ -91,9 +125,16 @@ public class Minimax {
 				//If it does, remove both coordinates from list of available moves and make recursive call
 				//Otherwise continue with loop
 				
+				if (Minimax.isValidCoord(child.getCoord(), maximizingPlayer, Gameboard.getInstance().getBoard()))
+				{
+					
+				} 
+				else 
+				{
+					continue;
+				}
 				
-				
-				v = Math.max(v, alphaBeta(child, alpha, beta, depth - 1, false));
+				v = Math.max(v, alphaBeta(child, alpha, beta, depth - 1, false));				
 				alpha = Math.max(alpha, v);
 				if (beta <= alpha)
 				{
@@ -107,6 +148,16 @@ public class Minimax {
 			v = Integer.MAX_VALUE;
 			for (Node child : node.children) 
 			{
+				
+				if (Minimax.isValidCoord(child.getCoord(),  !maximizingPlayer, Gameboard.getInstance().getBoard()))
+				{
+					
+				}
+				else
+				{
+					continue;
+				}
+				
 				v = Math.min(v, alphaBeta(child, alpha, beta, depth - 1, true));
 				beta = Math.min(beta, v);
 				if (beta <= alpha)

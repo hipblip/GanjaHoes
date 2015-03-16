@@ -196,6 +196,13 @@ public class Minimax {
 		return moves;
 	}
 	
+	private static int heuristicFunction() 
+	{
+		
+		
+		return -1;
+	}
+	
 	public Coord getBestMove() 
 	{
 		return bestMove;

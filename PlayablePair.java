@@ -16,7 +16,7 @@ public class PlayablePair {
 		return (spot1 == vec || spot2 == vec);
 	}
 	
-	private static void checkAddNewPlayable(PlayablePair p, ArrayList<PlayablePair> pairs)
+	public static void checkAddNewPlayable(PlayablePair p, ArrayList<PlayablePair> pairs)
 	{
 		for (int i = 0; i < pairs.size(); i++)
 		{
@@ -39,7 +39,7 @@ public class PlayablePair {
 		}
 	}
 	
-	public static boolean checkIfCanPlay(int specTurn)
+	public static ArrayList<PlayablePair> availableMoves(int specTurn, char[][] board)
 	{
 		ArrayList<Coord> list = new ArrayList<Coord>();
 		
@@ -49,7 +49,7 @@ public class PlayablePair {
 			{
 				Coord vec = new Coord(i,j);
 
-				if (Gameboard.getInstance().getBoard()[i][j] == ' ' && !list.contains(vec))
+				if (board[i][j] == ' ' && !list.contains(vec))
 				{
 					list.add(vec);
 				}
@@ -91,7 +91,13 @@ public class PlayablePair {
 			}
 		}
 		
-		
+		return pairs;
+	}
+	
+	public static boolean checkIfCanPlay(int specTurn)
+	{
+		ArrayList<PlayablePair> pairs = availableMoves(specTurn, Gameboard.getInstance().getBoard());
+
 		//printPlays(pairs);
 		
 		return pairs.size() > 0;

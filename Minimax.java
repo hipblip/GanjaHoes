@@ -172,28 +172,20 @@ public class Minimax {
 		}
 	}
 	
-	public static ArrayList<PlayablePair> availableMoves(char[][] currentBoard, Node node) {
-		// getBoard returns a deep copy of the gameboard with O(n^2) so this is done 
-		// so it's only evaluated once.
-		ArrayList<PlayablePair> moves = new ArrayList<PlayablePair>();
+	public static ArrayList<PlayablePair> availableMovesForNode(char[][] currentBoard, Node node, boolean whiteTurn) 
+	{
+		int turn = 1;
 		
-		for (int i = 0; i < currentBoard.length; i++) 
+		if (whiteTurn)
 		{
-			for (int j = 0; j < currentBoard[i].length; j++) 
-			{
-				if (currentBoard[i][j] == ' ')
-				{
-					//moves.add(new PlayablePair(i, j));
-				}
-			}
+			turn = 0;
 		}
 		
-		for (int i = 0; i < node.simulatedPairs.size(); i++) 
-		{
-			moves.removeAll(Collections.singleton(node.simulatedPairs.get(i)));
-		}
+		// do something with node? Idk
 		
-		return moves;
+		ArrayList<PlayablePair> pairs = PlayablePair.availableMoves(turn, currentBoard);
+		
+		return pairs;
 	}
 	
 	private static int heuristicFunction() 

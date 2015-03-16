@@ -86,13 +86,14 @@ public class Gameboard {
 			int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
 
 			gameBoard[x1][y1] = 'X';
-			if (x1-1 > 0 && gameBoard[x1-1][y1] == ' ')
-			{
-				gameBoard[x1-1][y1] = 'X';
-			}
-			else if (x1+1 < _BoardX && gameBoard[x1+1][y1] == ' ')
+			if (x1+1 < _BoardX && gameBoard[x1+1][y1] == ' ')
 			{
 				gameBoard[x1+1][y1] = 'X';
+			}
+			else if (x1-1 >= 0 && gameBoard[x1-1][y1] == ' ')
+			{
+				System.out.println("adf");
+				gameBoard[x1-1][y1] = 'X';
 			}
 			else
 			{
@@ -132,12 +133,13 @@ public class Gameboard {
 			{
 				gameBoard[x1][y1+1] = 'O';
 			}
-			else if (y1-1 > 0 && gameBoard[x1][y1-1] == ' ')
+			else if (y1-1 >= 0 && gameBoard[x1][y1-1] == ' ')
 			{
 				gameBoard[x1][y1-1] = 'O';
 			}
 			else
 			{
+				//System.out.println(gameBoard[x1][y1-1]);
 				System.out.println("ERROR: illegal move");
 			}			
 		}

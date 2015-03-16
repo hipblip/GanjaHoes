@@ -17,7 +17,7 @@ public class Minimax {
 	
 	static boolean isValidCoord(Coord c, boolean maximizingPlayer, char[][] board)
 	{	
-		if (maximizingPlayer)
+		if (!maximizingPlayer)
 		{
 			try
 			{
@@ -37,6 +37,7 @@ public class Minimax {
 				}
 				else 
 				{
+					
 					return true;
 				}
 			}
@@ -45,7 +46,7 @@ public class Minimax {
 		{
 			try
 			{
-				boolean valid = (board[c.getX()][c.getY() - 1] == ' ' || board[c.getX()][c.getY() + 1] == ' ');
+				boolean valid = (board[c.getX()][c.getY() + 1] == ' ' || board[c.getX()][c.getY() - 1] == ' ');
 				
 				return valid;
 			}

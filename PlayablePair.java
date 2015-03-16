@@ -11,25 +11,18 @@ public class PlayablePair {
 		spot2 = v2;
 	}
 	
+	public PlayablePair()
+	{
+		spot1 = new Coord();
+		spot2 = new Coord();
+	}
+	
 	public boolean containsVector(Coord vec)
 	{
 		return (spot1 == vec || spot2 == vec);
 	}
 	
-	public static void checkAddNewPlayable(PlayablePair p, ArrayList<PlayablePair> pairs)
-	{
-		for (int i = 0; i < pairs.size(); i++)
-		{
-			PlayablePair cur = (PlayablePair) pairs.get(i);
-			
-			if (cur.containsVector(p.spot1) && cur.containsVector(p.spot2)) //duplicate spot, don't add it
-			{
-				return;
-			}
-		}
-		
-		pairs.add(p);
-	}
+
 	
 	public static void printPlays(ArrayList<PlayablePair> plays)
 	{
@@ -37,6 +30,18 @@ public class PlayablePair {
 		{
 			System.out.println((PlayablePair) plays.get(i));
 		}
+	}
+	
+
+	
+	public static Node[] pairToNode(PlayablePair p)
+	{
+		Node[] nodes = new Node[2];
+		
+		nodes[0] = new Node(new Coord(p.spot1.getX(), p.spot1.getY()));
+		nodes[1] = new Node(new Coord(p.spot2.getX(), p.spot2.getY()));
+		
+		return nodes;
 	}
 	
 	public static ArrayList<PlayablePair> availableMoves(int specTurn, char[][] board)
@@ -91,7 +96,24 @@ public class PlayablePair {
 			}
 		}
 		
+
+		
 		return pairs;
+	}
+	
+	public static void checkAddNewPlayable(PlayablePair p, ArrayList<PlayablePair> pairs)
+	{
+		for (int i = 0; i < pairs.size(); i++)
+		{
+			PlayablePair cur = (PlayablePair) pairs.get(i);
+			
+			if (cur.containsVector(p.spot1) && cur.containsVector(p.spot2)) //duplicate spot, don't add it
+			{
+				return;
+			}
+		}
+		
+		pairs.add(p);
 	}
 	
 	public static boolean checkIfCanPlay(int specTurn)

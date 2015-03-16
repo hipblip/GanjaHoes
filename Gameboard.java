@@ -16,9 +16,14 @@ public class Gameboard {
 	
 	private Scanner sc = new Scanner(System.in);
 	
+	private Coord lastMove;
+	private Minimax ai;
+	private int minMaxDepth = 3;
+	
 	private Gameboard() 
 	{		
 		initBoard();
+		ai = new Minimax(minMaxDepth);
 	}
 	
 	/*
@@ -67,6 +72,15 @@ public class Gameboard {
 				pos1 = sc.nextLine();
 			} while (!legalWhiteMove(pos1, gameBoard));
 			
+			try
+			{
+				lastMove = Coord.convertToCoord(pos1);
+			}
+			catch (Exception e)
+			{
+				System.out.println(e);
+			}
+			
 			char pos1Let = pos1.charAt(0);
 			int x1 = pos1Let - 65;
 			int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
@@ -97,7 +111,10 @@ public class Gameboard {
 			}
 			else if (playMode == gameType.PVE)
 			{
-				System.out.println("heuristic");
+				//System.out.println("heuristic");
+				ai.alphaBeta(new Node(lastMove), Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), true);
+				pos1 = ai.getBestMove().getCoord().toString();
+				
 			}
 			else 
 			{

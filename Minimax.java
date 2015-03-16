@@ -6,9 +6,9 @@ public class Minimax {
 	
 	private int depthOfCheck;
 	
-	private Coord bestMove;
+	private Node bestMove;
 	
-	private Stack<PlayablePair> simulatedPlays = new Stack<PlayablePair>();
+	private static Stack<PlayablePair> simulatedPlays = new Stack<PlayablePair>();
 	
 	public Minimax(int depth) 
 	{
@@ -16,14 +16,11 @@ public class Minimax {
 	}
 	
 	static boolean isValidCoord(Coord c, boolean maximizingPlayer, char[][] board)
-	{
-		//Gameboard board = Gameboard.getInstance();
-		
+	{	
 		if (maximizingPlayer)
 		{
 			try
 			{
-				//boolean valid = (Gameboard.getInstance().getCharAt(c.getX() - 1, c.getY()) == ' ') || (Gameboard.getInstance().getCharAt(c.getX() + 1, c.getY()) == ' ');
 				boolean valid = (board[c.getX() - 1][c.getY()] == ' ' || board[c.getX() + 1][c.getY()] == ' ');
 				
 				return valid;
@@ -48,7 +45,6 @@ public class Minimax {
 		{
 			try
 			{
-				//boolean valid = (Gameboard.getInstance().getCharAt(c.getX(), c.getY() - 1) == ' ') || (Gameboard.getInstance().getCharAt(c.getX(), c.getY() + 1) == ' ');
 				boolean valid = (board[c.getX()][c.getY() - 1] == ' ' || board[c.getX()][c.getY() + 1] == ' ');
 				
 				return valid;
@@ -104,16 +100,27 @@ public class Minimax {
 	}
 	
 	
-	
+	//TODO remove simulated pair when recurring back up (MIGHT NOT BE HERE????!?!?@!?#@!#?@!$!?$@#$jt:lasjg:sljgkf)
+	//TODO FIGURE OUT WHERE TO RETURN BEST MOVE RATHER THAN JUST THE FUCKING VALUE OF THE NODE
 	public int alphaBeta(Node node, int alpha, int beta, int depth, boolean maximizingPlayer) // Max should always be O's when playing against a person
 	{
-		//TODO get all the children of the current node
+		// get all the children of the current node
+		ArrayList<PlayablePair> childPairs = new ArrayList<PlayablePair>();
+
+		childPairs = Minimax.availableMovesForNode(Gameboard.getInstance().getBoard(), node, !maximizingPlayer);
 				
-		int v = -1;
+		for (PlayablePair pair : childPairs)
+		{
+			node.children.add(PlayablePair.pairToNode(pair)[0]);
+			node.children.add(PlayablePair.pairToNode(pair)[1]);
+		}
 		
+		int v = -1;		
 		if (depth == 0 || node.children.size() == 0) 
 		{
-			
+			//return an actual heuristic, brotendo
+			//return node.heuristicValue;
+			node.heuristicValue = Minimax.heuristicFunction(node);
 			return node.heuristicValue;
 		}
 		
@@ -124,8 +131,7 @@ public class Minimax {
 			{
 				//Check if child will produce a playable pair
 				//If it does, remove both coordinates from list of available moves and make recursive call
-				//Otherwise continue with loop
-				
+				//Otherwise continue with loop				
 				if (Minimax.isValidCoord(child.getCoord(), maximizingPlayer, Gameboard.getInstance().getBoard()))
 				{
 					child.simulatedPairs = node.duplicateSimPairs();
@@ -137,12 +143,19 @@ public class Minimax {
 				}
 
 				v = Math.max(v, alphaBeta(child, alpha, beta, depth - 1, false));				
-				alpha = Math.max(alpha, v);
+				//alpha = Math.max(alpha, v);
+				if (v >= alpha)
+				{
+					alpha = v;
+					bestMove = node;
+				}
 				if (beta <= alpha)
 				{
 					break;
 				}
+				
 			}
+			node.simulatedPairs.remove(node.simulatedPairs.size()-1);
 			return v;
 		}
 		else // Playing X's
@@ -168,6 +181,7 @@ public class Minimax {
 					break;
 				}
 			}
+			node.simulatedPairs.remove(node.simulatedPairs.size()-1);
 			return v;
 		}
 	}
@@ -185,19 +199,147 @@ public class Minimax {
 		
 		ArrayList<PlayablePair> pairs = PlayablePair.availableMoves(turn, currentBoard);
 		
+		// Remove invalid coordinates
+		for (int i = 0; i < node.simulatedPairs.size(); i++)
+		{
+
+			for (int j = 0; j < pairs.size(); j++)
+			{
+				// If one of the pair coordinates overlaps with a simulatedPlays coordinate, remove it
+				if (node.simulatedPairs.get(i).spot1.equals(pairs.get(j).spot1) || node.simulatedPairs.get(i).spot1.equals(pairs.get(j).spot2) ||
+						node.simulatedPairs.get(i).spot2.equals(pairs.get(j).spot1) || node.simulatedPairs.get(i).spot2.equals(pairs.get(j).spot2))
+				{
+					pairs.remove(pairs.get(j));
+				}
+			}	
+
+		}
+		
 		return pairs;
 	}
 	
-	private static int heuristicFunction() 
+	private static int heuristicFunction(Node node) 
 	{
+		// Count every position such that the positions above and below the cell are unavailable
+		// Take into consideration the simPlays of the node
+		int count = 0;
 		
+		for (int i = 0; i < Gameboard.getInstance().getBoardX(); i++)
+		{
+			for (int j = 0; j < Gameboard.getInstance().getBoardY(); j++)
+			{
+				
+				try
+				{
+					if (Gameboard.getInstance().getCharAt(i, j) == ' ')
+						{
+						if (Gameboard.getInstance().getCharAt(i, j + 1) != ' ' && Gameboard.getInstance().getCharAt(i, j - 1) != ' ')
+						{
+							count++;
+						}
+						else // Check against the simulated pairs
+						{
+							for (PlayablePair p : node.simulatedPairs)
+							{
+								if (Gameboard.getInstance().getCharAt(i,  j + 1) != ' ' && 
+										(Gameboard.getInstance().getCharAt(i, j - 1) == Gameboard.getInstance().getCharAt(p.spot1.getX(),  p.spot1.getY()) ||
+										 Gameboard.getInstance().getCharAt(i, j - 1) == Gameboard.getInstance().getCharAt(p.spot2.getX(),  p.spot2.getY()))) 
+								{
+									count++;
+								}
+								else if (Gameboard.getInstance().getCharAt(i,  j - 1) != ' ' && 
+										(Gameboard.getInstance().getCharAt(i, j + 1) == Gameboard.getInstance().getCharAt(p.spot1.getX(),  p.spot1.getY()) ||
+										 Gameboard.getInstance().getCharAt(i, j + 1) == Gameboard.getInstance().getCharAt(p.spot2.getX(),  p.spot2.getY())))
+								{
+									count++;
+								}
+									
+							}
+						}
+					}
+				}
+				catch (Exception e) // index was out of bounds
+				{
+					//System.out.println(e);
+					if (j + 1 > Gameboard.getInstance().getBoardY()) // Upper was out of bounds
+					{
+						try 
+						{
+							if (Gameboard.getInstance().getCharAt(i,  j - 1) != ' ')
+							{
+								count++;
+							}
+							else // Check sim pairs
+							{
+								for (PlayablePair p : node.simulatedPairs)
+								{
+									if (Gameboard.getInstance().getCharAt(p.spot1.getX(), p.spot1.getY()) == Gameboard.getInstance().getCharAt(i,  j - 1) ||
+											Gameboard.getInstance().getCharAt(p.spot2.getX(), p.spot2.getY()) == Gameboard.getInstance().getCharAt(i, i - 1))
+									{
+										count++;
+									}
+								}
+							}
+							
+						}
+						catch (Exception ex)
+						{
+							System.out.println("If you got here, there's something wrong with the heuristic function :: Upper bound");
+						}
+					} 
+					else if (j - 1 < 0) //Lower bound
+					{
+						try 
+						{
+							if (Gameboard.getInstance().getCharAt(i,  j + 1) != ' ')
+							{
+								count++;
+							}
+							else // Check sim pairs
+							{
+								for (PlayablePair p : node.simulatedPairs)
+								{
+									if (Gameboard.getInstance().getCharAt(p.spot1.getX(), p.spot1.getY()) == Gameboard.getInstance().getCharAt(i,  j + 1) ||
+											Gameboard.getInstance().getCharAt(p.spot2.getX(), p.spot2.getY()) == Gameboard.getInstance().getCharAt(i, i + 1))
+									{
+										count++;
+									}
+								}
+							}
+							
+						}
+						catch (Exception ex)
+						{
+							System.out.println("If you got here, there's something wrong with the heuristic function :: Lower Bound");
+						}
+					}
+				}
+			}
+		}
 		
-		return -1;
+		return count;
 	}
 	
-	public Coord getBestMove() 
+	public static ArrayList<PlayablePair> getSimPlays() 
+	{
+		ArrayList<PlayablePair> simPlays = new ArrayList<PlayablePair>();
+		
+		for (int i = 0; i < simulatedPlays.size(); i++)
+		{
+			simPlays.add(simulatedPlays.get(i));
+		}
+		
+		return simPlays;
+	}
+	
+	public Node getBestMove() 
 	{
 		return bestMove;
+	}
+	
+	public int getDepth() 
+	{
+		return depthOfCheck;
 	}
 	
 }

@@ -7,17 +7,21 @@ public class Node {
 	ArrayList<Node> children;
 	ArrayList<PlayablePair> simulatedPairs;
 	
-	int heuristicValue;
+	int heuristicValue = -1;
 	
 	public Node(Coord c)
 	{
 		coord = c;
+		simulatedPairs = new ArrayList<PlayablePair>();
+		children = new ArrayList<Node>();
 	}
 	
 	public Node() 
 	{
 		coord = null;
 		parent = null;
+		simulatedPairs = new ArrayList<PlayablePair>();
+		children = new ArrayList<Node>();
 		//for (int i = 0; i < Minimax.availableMoves(Gameboard.getInstance().getBoard()).size(); i++)
 		//{
 		//	children.add(new Node(Minimax.availableMoves(Gameboard.getInstance().getBoard()).get(i)));

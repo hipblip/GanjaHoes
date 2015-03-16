@@ -70,4 +70,9 @@ public class Coord {
 		return letter + "" + num;
 	}
 	
+	public boolean equals(Coord c)
+	{
+		return this.x == c.getX() && this.y == c.getY();
+	}
+	
 }

@@ -102,7 +102,7 @@ public class Minimax {
 	
 	
 	//TODO remove simulated pair when recurring back up (MIGHT NOT BE HERE????!?!?@!?#@!#?@!$!?$@#$jt:lasjg:sljgkf)
-	//TODO FIGURE OUT WHERE TO RETURN BEST MOVE RATHER THAN JUST THE FUCKING VALUE OF THE NODE
+	//TODO FIGURE OUT WHERE TO RETURN BEST MOVE RATHER THAN JUST THE VALUE OF THE NODE
 	public int alphaBeta(Node node, int alpha, int beta, int depth, boolean maximizingPlayer) // Max should always be O's when playing against a person
 	{
 		// get all the children of the current node

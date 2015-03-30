@@ -132,7 +132,8 @@ public class Gameboard {
 				}
 				if (pos1.equals(""))
 				{
-					pos1 = PlayablePair.availableMoves(turn, Gameboard.getInstance().getBoard()).get(0).spot1.toString();
+					System.out.println("Oh boy");
+					pos1 = PlayablePair.availableMoves(turn + 1, Gameboard.getInstance().getBoard()).get(0).spot1.toString();
 				}
 				System.out.println("O's move: " + pos1);
 				float execTime = (System.currentTimeMillis() - startTime) / 1000f;

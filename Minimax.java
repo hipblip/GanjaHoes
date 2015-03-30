@@ -99,10 +99,8 @@ public class Minimax {
 		}
 		catch (Exception e){ return null; }
 	}
-	
-	
-	//TODO remove simulated pair when recurring back up (MIGHT NOT BE HERE????!?!?@!?#@!#?@!$!?$@#$jt:lasjg:sljgkf)
-	//TODO FIGURE OUT WHERE TO RETURN BEST MOVE RATHER THAN JUST THE VALUE OF THE NODE
+		
+	//TODO FIGURE OUT WHERE TO RETURN BEST MOVE RATHER THAN JUST THE  VALUE OF THE NODE
 	public int alphaBeta(Node node, int alpha, int beta, int depth, boolean maximizingPlayer) // Max should always be O's when playing against a person
 	{
 		// get all the children of the current node
@@ -115,8 +113,6 @@ public class Minimax {
 			
 			node.children.add(PlayablePair.pairToNode(pair)[0]);
 			node.children.add(PlayablePair.pairToNode(pair)[1]);
-			//node.printChildren();
-			//System.out.println(node.children.size());
 		}
 		
 		int v = -1;		
@@ -124,10 +120,8 @@ public class Minimax {
 		{
 			//return an actual heuristic, brotendo
 
-			//node.heuristicValue = Minimax.heuristicFunction(node);
-			node.heuristicValue = (int)Math.random() * 100;
-			
-			return node.heuristicValue;
+			//return Minimax.heuristicFunction(node);
+			return (int)(Math.random() * 101);
 		}
 		
 		if (maximizingPlayer) // Playing O's
@@ -148,21 +142,21 @@ public class Minimax {
 				{
 					continue;
 				}
-
-				v = Math.max(v, alphaBeta(child, alpha, beta, depth - 1, false));				
-				//alpha = Math.max(alpha, v);
-				if (v >= alpha)
-				{
-					alpha = v;
-					bestMove = child;
-				}
+				
+				int h = alphaBeta(child, alpha, beta, depth - 1, false);
+				
+				v = Math.max(v, h);
+				node.heuristicValue = v;
+				//System.out.println(v);
+				alpha = Math.max(alpha, v);
+				
 				if (beta <= alpha)
 				{
 					break;
 				}
 				
 			}
-
+	
 			return v;
 		}
 		else // Playing X's
@@ -182,14 +176,19 @@ public class Minimax {
 					continue;
 				}
 				
+				//node.heuristicValue = v;
 				v = Math.min(v, alphaBeta(child, alpha, beta, depth - 1, true));
+				//System.out.println(v);
+				node.heuristicValue = v;
 				beta = Math.min(beta, v);
+				
 				if (beta <= alpha)
 				{
 					break;
 				}
+				
 			}
-
+			
 			return v;
 		}
 	}

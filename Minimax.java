@@ -238,113 +238,33 @@ public class Minimax {
 			if (p.isVertical())
 			{
 				vertCount++;
+				
+				if (p.spot1.getX() == 1 || p.spot1.getX() == 6) // plays close to the L and R walls are more valuable
+				{
+					vertCount++; 
+				}
 			}
 			else
 			{
 				horzCount++;
+				
+				if (p.spot1.getY() == 1 || p.spot1.getY() == 6) // plays close to the north and south walls are more valuable
+				{
+					horzCount++; 
+				}
 			}
 			
 			boardForNode[p.spot1.getX()][p.spot1.getY()] = 'B';
 			boardForNode[p.spot2.getX()][p.spot2.getY()] = 'B';
 		}
 		
-		ArrayList<PlayablePair> moves = PlayablePair.availableMoves(1, boardForNode);
+		ArrayList<PlayablePair> vertMoves = PlayablePair.availableMoves(0, boardForNode); //white's moves
+		ArrayList<PlayablePair> horzMoves = PlayablePair.availableMoves(1, boardForNode);
 		
-		int count = 0;
+		horzCount += horzMoves.size(); // total of all permanent moves and all available moves
+		vertCount += vertMoves.size();
 		
-		for (int i = 0; i < Gameboard.getInstance().getBoardX(); i++)
-		{
-			for (int j = 0; j < Gameboard.getInstance().getBoardY(); j++)
-			{
-				try
-				{
-					if (Gameboard.getInstance().getCharAt(i, j) == ' ')
-						{
-						if (Gameboard.getInstance().getCharAt(i+1, j) != ' ' && Gameboard.getInstance().getCharAt(i-1, j) != ' ')
-						{
-							count++;
-						}
-						else // Check against the simulated pairs
-						{
-							for (PlayablePair p : node.simulatedPairs)
-							{
-								if (Gameboard.getInstance().getCharAt(i+1,  j) != ' ' && 
-										(Gameboard.getInstance().getCharAt(i-1, j) == Gameboard.getInstance().getCharAt(p.spot1.getX(),  p.spot1.getY()) ||
-										 Gameboard.getInstance().getCharAt(i - 1, j) == Gameboard.getInstance().getCharAt(p.spot2.getX(),  p.spot2.getY()))) 
-								{
-									count++;
-								}
-								else if (Gameboard.getInstance().getCharAt(i -1,  j) != ' ' && 
-										(Gameboard.getInstance().getCharAt(i + 1, j) == Gameboard.getInstance().getCharAt(p.spot1.getX(),  p.spot1.getY()) ||
-										 Gameboard.getInstance().getCharAt(i + 1, j) == Gameboard.getInstance().getCharAt(p.spot2.getX(),  p.spot2.getY())))
-								{
-									count++;
-								}
-									
-							}
-						}
-					}
-				}
-				catch (Exception e) // index was out of bounds
-				{
-					//System.out.println(e);
-					if (i + 1 > Gameboard.getInstance().getBoardY()) // Upper was out of bounds
-					{
-						try 
-						{
-							if (Gameboard.getInstance().getCharAt(i - 1,  j) != ' ')
-							{
-								count++;
-							}
-							else // Check sim pairs
-							{
-								for (PlayablePair p : node.simulatedPairs)
-								{
-									if (Gameboard.getInstance().getCharAt(p.spot1.getX(), p.spot1.getY()) == Gameboard.getInstance().getCharAt(i - 1,  j) ||
-											Gameboard.getInstance().getCharAt(p.spot2.getX(), p.spot2.getY()) == Gameboard.getInstance().getCharAt(i - 1, j))
-									{
-										count++;
-									}
-								}
-							}
-							
-						}
-						catch (Exception ex)
-						{
-							System.out.println("If you got here, there's something wrong with the heuristic function :: Upper bound");
-						}
-					} 
-					else if (i - 1 < 0) //Lower bound
-					{
-						try 
-						{
-							if (Gameboard.getInstance().getCharAt(i + 1,  j) != ' ')
-							{
-								count++;
-							}
-							else // Check sim pairs
-							{
-								for (PlayablePair p : node.simulatedPairs)
-								{
-									if (Gameboard.getInstance().getCharAt(p.spot1.getX(), p.spot1.getY()) == Gameboard.getInstance().getCharAt(i + 1,  j) ||
-											Gameboard.getInstance().getCharAt(p.spot2.getX(), p.spot2.getY()) == Gameboard.getInstance().getCharAt(i + 1, j))
-									{
-										count++;
-									}
-								}
-							}
-							
-						}
-						catch (Exception ex)
-						{
-							System.out.println("If you got here, there's something wrong with the heuristic function :: Lower Bound");
-						}
-					}
-				}
-			}
-		}
-		
-		return count;
+		return horzCount - vertCount;
 	}
 	
 	public static ArrayList<PlayablePair> getSimPlays() 

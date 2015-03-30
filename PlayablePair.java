@@ -125,6 +125,16 @@ public class PlayablePair {
 		return pairs.size() > 0;
 	}
 	
+	public boolean overlapsPair(PlayablePair p)
+    {
+            return (containsVector(p.spot1) || containsVector(p.spot2));
+    }
+
+	public boolean isValidPair(Coord c1, Coord c2)
+    {
+            return (c1.getX() >= 0 && c1.getY() >= 0 && c1.getX() < 8 && c1.getY() < 8 && c2.getX() >= 0 && c2.getY() >= 0 && c2.getX() < 8 && c2.getY() < 8);
+    }
+	
 	public boolean isVertical()
 	{
 		return (spot1.getX() == spot2.getX());

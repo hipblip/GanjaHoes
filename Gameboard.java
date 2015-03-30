@@ -18,7 +18,7 @@ public class Gameboard {
 	
 	private Coord lastMove;
 	private Minimax ai;
-	private int minMaxDepth = 3;
+	private int minMaxDepth = 2;
 	
 	private Gameboard() 
 	{		
@@ -64,14 +64,13 @@ public class Gameboard {
 	void makeMove(int turn) 
 	{
 		String pos1 = "";
-
+		System.out.println(turn);
 		if (turn%2 == 0) // White's turn
 		{	
 			do {
 				System.out.print("X's turn\nPlease enter your next move\n1: ");
 				pos1 = sc.nextLine();
 			} while (!legalWhiteMove(pos1, gameBoard));
-			
 			try
 			{
 				lastMove = Coord.convertToCoord(pos1);
@@ -79,6 +78,11 @@ public class Gameboard {
 			catch (Exception e)
 			{
 				System.out.println(e);
+			}
+			
+			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
+			{
+				return;
 			}
 			
 			char pos1Let = pos1.charAt(0);
@@ -100,7 +104,8 @@ public class Gameboard {
 				System.out.println("ERROR: illegal move");
 			}
 			
-			
+
+		
 		}
 		else // Black's turn
 		{
@@ -119,10 +124,15 @@ public class Gameboard {
 				int alpha = ai.alphaBeta(n, Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), true);
 				for (int i = 0; i < n.children.size(); i++)
 				{
+					System.out.println(n.children.get(i).getCoord());
 					if (alpha == n.children.get(i).getHeuristic()) {
 						pos1 = n.children.get(i).getCoord().toString();
 						break;
 					}
+				}
+				if (pos1.equals(""))
+				{
+					pos1 = PlayablePair.availableMoves(turn, Gameboard.getInstance().getBoard()).get(0).spot1.toString();
 				}
 				System.out.println("O's move: " + pos1);
 				float execTime = (System.currentTimeMillis() - startTime) / 1000f;
@@ -131,24 +141,30 @@ public class Gameboard {
 				
 				if (turn > 1)
 				{
-					System.out.println("depth set to 3");
+					System.out.println("depth 5");
 					ai.setDepth(3);
 				}
 				if (turn > 7)
 				{
-					System.out.println("depth set to 4");
+					System.out.println("depth 5");
 					ai.setDepth(4);
 				}
 				if (turn > 11)
 				{
-					System.out.println("depth set to 5");
+					System.out.println("depth 5");
 					ai.setDepth(5);
 				}
+
 				
 			}
 			else 
 			{
 				System.out.println("ERROR: Invalid game type.");
+			}
+			
+			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
+			{
+				return;
 			}
 			
 			char pos1Let = pos1.charAt(0);
@@ -168,7 +184,8 @@ public class Gameboard {
 			{
 				//System.out.println(gameBoard[x1][y1-1]);
 				System.out.println("ERROR: illegal move");
-			}			
+			}	
+
 		}
 		
 		passTurn();
@@ -176,13 +193,14 @@ public class Gameboard {
 	
 	public static boolean legalWhiteMove(String pos1, char[][] gb) 
 	{
-		Coord c = new Coord(1, 1);
+		Coord c = new Coord(0,0);
 		try {
 			c = Coord.convertToCoord(pos1);
 		} 
 		catch(Exception e)
 		{
 			System.out.println("Please enter a valid position");
+			return false;
 		}
 		
 		int x1 = c.getX();
@@ -239,6 +257,7 @@ public class Gameboard {
 		catch(Exception e)
 		{
 			System.out.println("Please enter a valid position");
+			return false;
 		}
 		
 		int x1 = c.getX();

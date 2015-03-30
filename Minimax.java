@@ -242,39 +242,40 @@ public class Minimax {
            
             for (PlayablePair p : node.simulatedPairs)
             {
-            	if (p.spot1.getX() < 0 || p.spot1.getY() < 0 || p.spot2.getX() < 0 || p.spot2.getY() < 0)
+                if (p.spot1.getX() < 0 || p.spot1.getY() < 0 || p.spot2.getX() < 0 || p.spot2.getY() < 0)
                 {
-                	//System.out.println("Warning: Invalid coords: " + p.spot1.toString() + " " + p.spot2.toString());
-                	continue;
+                        //System.out.println("Warning: Invalid coords: " + p.spot1.toString() + " " + p.spot2.toString());
+                        continue;
                 }
                 else
                 {
-                	boardForNode[p.spot1.getX()][p.spot1.getY()] = 'B';
-                	boardForNode[p.spot2.getX()][p.spot2.getY()] = 'B';
+                        boardForNode[p.spot1.getX()][p.spot1.getY()] = 'B';
+                        boardForNode[p.spot2.getX()][p.spot2.getY()] = 'B';
                 }
-            	
+               
                 if (p.isVertical())
                 {
                     vertCount++;
-                           
-                    if (p.spot1.getY() == 1 || p.spot1.getY() == 6) // plays close to the L and R walls are more valuable
-                    {
-                        vertCount++;
-                    }
                 }
                 else
                 {
                     horzCount++;
-                           
-                    if (p.spot1.getX() == 1 || p.spot1.getX() == 6) // plays close to the north and south walls are more valuable
-                    {
-                        horzCount++;
-                    }
                 }     
             }
            
             ArrayList<PlayablePair> vertMoves = PlayablePair.availableMoves(0, boardForNode); //white's moves
             ArrayList<PlayablePair> horzMoves = PlayablePair.availableMoves(1, boardForNode);
+           
+            for (PlayablePair ph : horzMoves)
+            {
+                for (PlayablePair pv : vertMoves)
+                {
+                    if (ph.overlapsPair(pv))
+                    {
+                        horzCount++;
+                    }
+                }
+            }
            
             horzCount += horzMoves.size(); // total of all permanent moves and all available moves
             vertCount += vertMoves.size();

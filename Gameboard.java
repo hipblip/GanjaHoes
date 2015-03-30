@@ -7,6 +7,8 @@ public class Gameboard {
 	private static Gameboard instance = null;
 	private char[][] gameBoard;
 	
+	private boolean botIsHorizontal = false;
+	
 	private int _BoardX = 8;
 	private int _BoardY = 8;
 	
@@ -64,64 +66,55 @@ public class Gameboard {
 	void makeMove(int turn) 
 	{
 		String pos1 = "";
-		System.out.println(turn);
-		if (turn%2 == 0) // White's turn
+		System.out.println("Turn # " + turn);
+		if (turn % 2 == 0) // White's turn
 		{	
-			do {
-				System.out.print("X's turn\nPlease enter your next move\n1: ");
-				pos1 = sc.nextLine();
-			} while (!legalWhiteMove(pos1, gameBoard));
-			try
+			if (botIsHorizontal)
 			{
-				lastMove = Coord.convertToCoord(pos1);
-			}
-			catch (Exception e)
-			{
-				System.out.println(e);
-			}
-			
-//			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
-//			{
-//				return;
-//			}
-			
-			char pos1Let = pos1.charAt(0);
-			int x1 = pos1Let - 65;
-			int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
-
-			gameBoard[x1][y1] = 'X';
-			if (x1+1 < _BoardX && gameBoard[x1+1][y1] == ' ')
-			{
-				gameBoard[x1+1][y1] = 'X';
-			}
-			else if (x1-1 >= 0 && gameBoard[x1-1][y1] == ' ')
-			{
-				//System.out.println("adf");
-				gameBoard[x1-1][y1] = 'X';
+				do {
+					System.out.print("X's turn\nPlease enter your next move\n1: ");
+					pos1 = sc.nextLine();
+				} while (!legalWhiteMove(pos1, gameBoard));
+				try
+				{
+					lastMove = Coord.convertToCoord(pos1);
+				}
+				catch (Exception e)
+				{
+					System.out.println(e);
+				}
+				
+	//			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
+	//			{
+	//				return;
+	//			}
+				
+				char pos1Let = pos1.charAt(0);
+				int x1 = pos1Let - 65;
+				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
+	
+				gameBoard[x1][y1] = 'X';
+				if (x1+1 < _BoardX && gameBoard[x1+1][y1] == ' ')
+				{
+					gameBoard[x1+1][y1] = 'X';
+				}
+				else if (x1-1 >= 0 && gameBoard[x1-1][y1] == ' ')
+				{
+					//System.out.println("adf");
+					gameBoard[x1-1][y1] = 'X';
+				}
+				else
+				{
+					System.out.println("ERROR: illegal move");
+				}
 			}
 			else
 			{
-				System.out.println("ERROR: illegal move");
-			}
-			
-
-		
-		}
-		else // Black's turn
-		{
-			if (playMode == gameType.PVP) {
-				do {
-					System.out.print("O's turn\nPlease enter your next move:\n1: ");
-					pos1 = sc.nextLine();
-				} while (!legalBlackMove(pos1, gameBoard));
-			}
-			else if (playMode == gameType.PVE)
-			{
-				//System.out.println("heuristic");
-				lastMove.setY(lastMove.getY()+1);
+				lastMove = new Coord(1,1);
+				lastMove.setX(lastMove.getX()+1);
 				Node n = new Node(lastMove);
 				long startTime = System.currentTimeMillis();
-				int alpha = ai.alphaBeta(n, Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), true);
+				int alpha = ai.alphaBeta(n, Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), false);
 				for (int i = 0; i < n.children.size(); i++)
 				{
 					System.out.println(n.children.get(i).getCoord());
@@ -135,58 +128,156 @@ public class Gameboard {
 					System.out.println("Oh boy");
 					pos1 = PlayablePair.availableMoves(turn + 1, Gameboard.getInstance().getBoard()).get(0).spot1.toString();
 				}
-				System.out.println("O's move: " + pos1);
+				System.out.println("X's move: " + pos1);
 				float execTime = (System.currentTimeMillis() - startTime) / 1000f;
 				System.out.println("Execution time: " + execTime);
 				//pos1 = ai.getBestMove().getCoord().toString();
 				
 				if (turn > 1)
 				{
-					System.out.println("depth 5");
+					System.out.println("depth 3");
 					ai.setDepth(3);
 				}
 				if (turn > 7)
 				{
-					System.out.println("depth 5");
+					System.out.println("depth 4");
 					ai.setDepth(4);
 				}
-				if (turn > 11)
-				{
-					System.out.println("depth 5");
-					ai.setDepth(5);
-				}
-
 				
-			}
-			else 
-			{
-				System.out.println("ERROR: Invalid game type.");
-			}
-			
-//			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
-//			{
-//				return;
-//			}
-			
-			char pos1Let = pos1.charAt(0);
-			int x1 = pos1Let - 65;
-			int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
+				char pos1Let = pos1.charAt(0);
+				int x1 = pos1Let - 65;
+				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
 
-			gameBoard[x1][y1] = 'O';
-			if (y1+1 < _BoardY && gameBoard[x1][y1+1] == ' ')
-			{
-				gameBoard[x1][y1+1] = 'O';
+				gameBoard[x1][y1] = 'X';
+				if (x1+1 < _BoardY && gameBoard[x1+1][y1] == ' ')
+				{
+					gameBoard[x1+1][y1] = 'X';
+				}
+				else if (x1-1 >= 0 && gameBoard[x1-1][y1] == ' ')
+				{
+					gameBoard[x1-1][y1] = 'X';
+				}
+				else
+				{
+					//System.out.println(gameBoard[x1][y1-1]);
+					System.out.println("ERROR: illegal move");
+				}	
 			}
-			else if (y1-1 >= 0 && gameBoard[x1][y1-1] == ' ')
+		}
+		else // Black's turn
+		{
+			if (botIsHorizontal)
 			{
-				gameBoard[x1][y1-1] = 'O';
+				if (playMode == gameType.PVP) {
+					do {
+						System.out.print("O's turn\nPlease enter your next move:\n1: ");
+						pos1 = sc.nextLine();
+					} while (!legalBlackMove(pos1, gameBoard));
+				}
+				else if (playMode == gameType.PVE)
+				{
+					//System.out.println("heuristic");
+					lastMove.setY(lastMove.getY()+1);
+					Node n = new Node(lastMove);
+					long startTime = System.currentTimeMillis();
+					int alpha = ai.alphaBeta(n, Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), true);
+					for (int i = 0; i < n.children.size(); i++)
+					{
+						System.out.println(n.children.get(i).getCoord());
+						if (alpha == n.children.get(i).getHeuristic()) {
+							pos1 = n.children.get(i).getCoord().toString();
+							break;
+						}
+					}
+					if (pos1.equals(""))
+					{
+						System.out.println("Oh boy");
+						pos1 = PlayablePair.availableMoves(turn + 1, Gameboard.getInstance().getBoard()).get(0).spot1.toString();
+					}
+					System.out.println("O's move: " + pos1);
+					float execTime = (System.currentTimeMillis() - startTime) / 1000f;
+					System.out.println("Execution time: " + execTime);
+					//pos1 = ai.getBestMove().getCoord().toString();
+					
+					if (turn > 1)
+					{
+						System.out.println("depth 3");
+						ai.setDepth(3);
+					}
+					if (turn > 7)
+					{
+						System.out.println("depth 4");
+						ai.setDepth(4);
+					}
+				}
+				else 
+				{
+					System.out.println("ERROR: Invalid game type.");
+				}
+				
+	//			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
+	//			{
+	//				return;
+	//			}
+				
+				char pos1Let = pos1.charAt(0);
+				int x1 = pos1Let - 65;
+				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
+	
+				gameBoard[x1][y1] = 'O';
+				if (y1+1 < _BoardY && gameBoard[x1][y1+1] == ' ')
+				{
+					gameBoard[x1][y1+1] = 'O';
+				}
+				else if (y1-1 >= 0 && gameBoard[x1][y1-1] == ' ')
+				{
+					gameBoard[x1][y1-1] = 'O';
+				}
+				else
+				{
+					//System.out.println(gameBoard[x1][y1-1]);
+					System.out.println("ERROR: illegal move");
+				}	
 			}
-			else
-			{
-				//System.out.println(gameBoard[x1][y1-1]);
-				System.out.println("ERROR: illegal move");
+			else // player plays horizontally
+			{	
+				do {
+					System.out.print("X's turn\nPlease enter your next move\n1: ");
+					pos1 = sc.nextLine();
+				} while (!legalBlackMove(pos1, gameBoard));
+				try
+				{
+					lastMove = Coord.convertToCoord(pos1);
+				}
+				catch (Exception e)
+				{
+					System.out.println(e);
+				}
+				
+	//			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
+	//			{
+	//				return;
+	//			}
+				
+				char pos1Let = pos1.charAt(0);
+				int x1 = pos1Let - 65;
+				int y1 = Integer.parseInt(pos1.charAt(1) + "") - 1;
+	
+				gameBoard[x1][y1] = 'O';
+				if (y1+1 < _BoardX && gameBoard[x1][y1+1] == ' ')
+				{
+					gameBoard[x1][y1+1] = 'O';
+				}
+				else if (y1-1 >= 0 && gameBoard[x1][y1-1] == ' ')
+				{
+					//System.out.println("adf");
+					gameBoard[x1][y1-1] = 'O';
+				}
+				else
+				{
+					System.out.println("ERROR: illegal move");
+				}
 			}	
-
 		}
 		
 		passTurn();

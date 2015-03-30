@@ -117,6 +117,7 @@ public class Gameboard {
 				ai.alphaBeta(new Node(lastMove), Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), true);
 				
 				pos1 = ai.getBestMove().getCoord().toString();
+				System.out.println("AI MOVE: " + pos1);
 				
 			}
 			else 

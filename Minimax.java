@@ -202,8 +202,6 @@ public class Minimax {
 			turn = 0;
 		}
 		
-		// do something with node? Idk
-		
 		ArrayList<PlayablePair> pairs = PlayablePair.availableMoves(turn, currentBoard);
 		
 		// Remove invalid coordinates
@@ -228,14 +226,36 @@ public class Minimax {
 	private static int heuristicFunction(Node node) 
 	{
 		// Count every position such that the positions above and below the cell are unavailable
-		// Take into consideration the simPlays of the node
+		// Take into consideration the simPlays of the node.
+		int h = 0;
+		int horzCount = 0;
+		int vertCount = 0;
+		
+		char[][] boardForNode = Gameboard.getInstance().getBoard();
+		
+		for (PlayablePair p : node.simulatedPairs)
+		{
+			if (p.isVertical())
+			{
+				vertCount++;
+			}
+			else
+			{
+				horzCount++;
+			}
+			
+			boardForNode[p.spot1.getX()][p.spot1.getY()] = 'B';
+			boardForNode[p.spot2.getX()][p.spot2.getY()] = 'B';
+		}
+		
+		ArrayList<PlayablePair> moves = PlayablePair.availableMoves(1, boardForNode);
+		
 		int count = 0;
 		
 		for (int i = 0; i < Gameboard.getInstance().getBoardX(); i++)
 		{
 			for (int j = 0; j < Gameboard.getInstance().getBoardY(); j++)
 			{
-				
 				try
 				{
 					if (Gameboard.getInstance().getCharAt(i, j) == ' ')

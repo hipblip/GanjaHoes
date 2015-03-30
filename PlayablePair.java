@@ -17,11 +17,6 @@ public class PlayablePair {
 		spot2 = new Coord();
 	}
 	
-	public boolean isVertical()
-	{
-		return (spot1.getX() == spot2.getX());
-	}
-	
 	public boolean containsVector(Coord vec)
 	{
 		return (spot1 == vec || spot2 == vec);
@@ -128,6 +123,11 @@ public class PlayablePair {
 		//printPlays(pairs);
 		
 		return pairs.size() > 0;
+	}
+	
+	public boolean isVertical()
+	{
+		return (spot1.getX() == spot2.getX());
 	}
 	
 	public String toString()

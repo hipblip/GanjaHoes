@@ -113,11 +113,21 @@ public class Gameboard {
 			else if (playMode == gameType.PVE)
 			{
 				//System.out.println("heuristic");
-				lastMove.setY(lastMove.getY()+2);
-				ai.alphaBeta(new Node(lastMove), Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), true);
-				
-				pos1 = ai.getBestMove().getCoord().toString();
-				System.out.println("AI MOVE: " + pos1);
+				lastMove.setY(lastMove.getY()+1);
+				Node n = new Node(lastMove);
+				long startTime = System.currentTimeMillis();
+				int alpha = ai.alphaBeta(n, Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), true);
+				for (int i = 0; i < n.children.size(); i++)
+				{
+					if (alpha == n.children.get(i).getHeuristic()) {
+						pos1 = n.children.get(i).getCoord().toString();
+						break;
+					}
+				}
+				System.out.println("O's move: " + pos1);
+				float execTime = (System.currentTimeMillis() - startTime) / 1000f;
+				System.out.println("Execution time: " + execTime);
+				//pos1 = ai.getBestMove().getCoord().toString();
 				
 			}
 			else 

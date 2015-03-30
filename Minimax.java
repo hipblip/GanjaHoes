@@ -118,10 +118,8 @@ public class Minimax {
 		int v = -1;		
 		if (depth == 0 || node.children.size() == 0) 
 		{
-			//return an actual heuristic, brotendo
-
-			//return Minimax.heuristicFunction(node);
-			return (int)(Math.random() * 101);
+			return Minimax.heuristicFunction(node);
+			//return (int)(Math.random() * 101);
 		}
 		
 		if (maximizingPlayer) // Playing O's

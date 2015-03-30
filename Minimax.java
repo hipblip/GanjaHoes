@@ -24,34 +24,55 @@ public class Minimax {
 	{	
 		if (!maximizingPlayer)
 		{
-			if (c.getX() == 0)
+			try
 			{
-				return board[c.getX() + 1][c.getY()] == ' ';
+				boolean valid = (board[c.getX() - 1][c.getY()] == ' ' || board[c.getX() + 1][c.getY()] == ' ');
+				
+				return valid;
 			}
-			else if (c.getX() == Gameboard.getInstance().getBoardX() - 1)
+			catch (Exception e) // If x is out of bounds catch the exception and check if the other direction is valid
 			{
-				return board[c.getX() - 1][c.getY()] == ' ';
-			}
-			else
-			{
-				return board[c.getX() + 1][c.getY()] == ' ' || board[c.getX() - 1][c.getY()] == ' ';
+				if (c.getX() - 1 < 0 && board[c.getX() + 1][c.getY()] != ' ')
+				{
+					return false; 
+				}
+				else if (c.getX() + 1 >= Gameboard.getInstance().getBoardX() && board[c.getX() - 1][c.getY()] != ' ') 
+				{
+					return false;
+				}
+				else 
+				{
+					
+					return true;
+				}
 			}
 		}
 		else
 		{
-			if (c.getY() == 0)
+			try
 			{
-				return board[c.getX()][c.getY() + 1] == ' ';
+				boolean valid = (board[c.getX()][c.getY() + 1] == ' ' || board[c.getX()][c.getY() - 1] == ' ');
+				
+				return valid;
 			}
-			else if (c.getY() == Gameboard.getInstance().getBoardY() - 1)
+			catch (Exception e)
 			{
-				return board[c.getX()][c.getY() - 1] == ' ';
-			}
-			else
-			{
-				return board[c.getX()][c.getY() + 1] == ' ' || board[c.getX()][c.getY() - 1] == ' ';
+				if (c.getY() - 1 < 0 && board[c.getX()][c.getY() + 1] != ' ')
+				{
+					return false;
+				}
+				else if (c.getY() + 1 >= Gameboard.getInstance().getBoardY() && board[c.getX()][c.getY() - 1] != ' ')
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
 			}
 		}
+		
+		//return false;
 	}
 	
 	PlayablePair getPlayablePair(Coord c, boolean maximizingPlayer, Gameboard board)
@@ -90,7 +111,7 @@ public class Minimax {
 		// get all the children of the current node
 		ArrayList<PlayablePair> childPairs = new ArrayList<PlayablePair>();
 
-		childPairs = Minimax.availableMovesForNode(Gameboard.getInstance().getBoard(), node, !maximizingPlayer);
+		childPairs = Minimax.availableMovesForNode(Gameboard.getInstance().getBoard(), node, maximizingPlayer);// TODO this line
 				
 		for (PlayablePair pair : childPairs)
 		{
@@ -186,8 +207,9 @@ public class Minimax {
 			turn = 0;
 		}
 		
+		// do something with node? Idk
+		
 		ArrayList<PlayablePair> pairs = PlayablePair.availableMoves(turn, currentBoard);
-		ArrayList<PlayablePair> valid = new ArrayList<PlayablePair>();
 		
 		// Remove invalid coordinates
 		for (int i = 0; i < node.simulatedPairs.size(); i++)
@@ -199,17 +221,13 @@ public class Minimax {
 				if (node.simulatedPairs.get(i).spot1.equals(pairs.get(j).spot1) || node.simulatedPairs.get(i).spot1.equals(pairs.get(j).spot2) ||
 						node.simulatedPairs.get(i).spot2.equals(pairs.get(j).spot1) || node.simulatedPairs.get(i).spot2.equals(pairs.get(j).spot2))
 				{
-					//pairs.remove(pairs.get(j));
-				}
-				else
-				{
-					valid.add(pairs.get(j));
+					pairs.remove(pairs.get(j));
 				}
 			}	
 
 		}
 		
-		return valid;
+		return pairs;
 	}
 	
 	private static int heuristicFunction(Node node)

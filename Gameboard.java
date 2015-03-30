@@ -80,10 +80,10 @@ public class Gameboard {
 				System.out.println(e);
 			}
 			
-			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
-			{
-				return;
-			}
+//			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
+//			{
+//				return;
+//			}
 			
 			char pos1Let = pos1.charAt(0);
 			int x1 = pos1Let - 65;
@@ -163,10 +163,10 @@ public class Gameboard {
 				System.out.println("ERROR: Invalid game type.");
 			}
 			
-			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
-			{
-				return;
-			}
+//			if (!PlayablePair.checkIfCanPlay(turn + 1) || !PlayablePair.checkIfCanPlay(turn)) 
+//			{
+//				return;
+//			}
 			
 			char pos1Let = pos1.charAt(0);
 			int x1 = pos1Let - 65;

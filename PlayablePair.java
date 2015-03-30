@@ -135,6 +135,24 @@ public class PlayablePair {
             return (c1.getX() >= 0 && c1.getY() >= 0 && c1.getX() < 8 && c1.getY() < 8 && c2.getX() >= 0 && c2.getY() >= 0 && c2.getX() < 8 && c2.getY() < 8);
     }
 	
+	public static boolean isValidOMove(Coord c)
+	{
+		//if (c.getY() - 1 < 0)
+		//{
+		//	return c.getY() + 1 == ' ';
+		//}
+		//else if (c.getY() > Gameboard.getInstance().getBoardY())
+		//{
+		//	return c.getY() - 1 == ' ';
+		//} 
+		//else
+		//{
+			System.out.println(c.getY());
+			System.out.println((c.getY() + 1 == ' ' || c.getY() - 1 ==  ' '));
+			return (c.getY() + 1 == ' ' || c.getY() - 1 ==  ' ');
+		//}		
+	}
+	
 	public boolean isVertical()
 	{
 		return (spot1.getX() == spot2.getX());

@@ -92,7 +92,7 @@ public class Gameboard {
 			}
 			else if (x1-1 >= 0 && gameBoard[x1-1][y1] == ' ')
 			{
-				System.out.println("adf");
+				//System.out.println("adf");
 				gameBoard[x1-1][y1] = 'X';
 			}
 			else
@@ -129,6 +129,22 @@ public class Gameboard {
 				System.out.println("Execution time: " + execTime);
 				//pos1 = ai.getBestMove().getCoord().toString();
 				
+				if (turn > 1)
+				{
+					System.out.println("depth set to 3");
+					ai.setDepth(3);
+				}
+				if (turn > 7)
+				{
+					System.out.println("depth set to 4");
+					ai.setDepth(4);
+				}
+				if (turn > 11)
+				{
+					System.out.println("depth set to 5");
+					ai.setDepth(5);
+				}
+				
 			}
 			else 
 			{
@@ -160,7 +176,7 @@ public class Gameboard {
 	
 	public static boolean legalWhiteMove(String pos1, char[][] gb) 
 	{
-		Coord c = new Coord();
+		Coord c = new Coord(1, 1);
 		try {
 			c = Coord.convertToCoord(pos1);
 		} 
@@ -215,7 +231,7 @@ public class Gameboard {
 	 */
 	public static boolean legalBlackMove(String pos1, char[][] gb) 
 	{
-		Coord c = new Coord();
+		Coord c = new Coord(1, 1);
 		
 		try {
 			c = Coord.convertToCoord(pos1);

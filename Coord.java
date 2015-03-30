@@ -9,11 +9,11 @@ public class Coord {
 		y = yy;
 	}
 	
-	public Coord() 
+	/*public Coord() 
 	{
 		x = -1;
 		y = -1;
-	}
+	}*/
 	
 	public int getX() 
 	{
@@ -37,9 +37,9 @@ public class Coord {
 	
 	public static Coord convertToCoord(String coord) throws Exception
 	{
-		Coord newCoord = new Coord();
 		int x1;
 		int y1;
+		
 		if (coord.length() != 2) 
 		{
 			throw new Exception("Invalid coord string length");
@@ -57,8 +57,9 @@ public class Coord {
 			throw new Exception("Invalid Coordinate String");
 		}
 		
-		newCoord.x = x1;
-		newCoord.y = y1;
+		Coord newCoord = new Coord(x1, y1);
+		//newCoord.x = x1;
+		//newCoord.y = y1;
 		
 		return newCoord;
 	}

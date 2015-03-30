@@ -15,6 +15,11 @@ public class Minimax {
 		depthOfCheck = depth;
 	}
 	
+	public void setDepth(int num)
+	{
+		depthOfCheck = num;
+	}
+	
 	static boolean isValidCoord(Coord c, boolean maximizingPlayer, char[][] board)
 	{	
 		if (!maximizingPlayer)
@@ -237,27 +242,35 @@ public class Minimax {
            
             for (PlayablePair p : node.simulatedPairs)
             {
-                    if (p.isVertical())
-                    {
-                            vertCount++;
+            	if (p.spot1.getX() < 0 || p.spot1.getY() < 0 || p.spot2.getX() < 0 || p.spot2.getY() < 0)
+                {
+                	//System.out.println("Warning: Invalid coords: " + p.spot1.toString() + " " + p.spot2.toString());
+                	continue;
+                }
+                else
+                {
+                	boardForNode[p.spot1.getX()][p.spot1.getY()] = 'B';
+                	boardForNode[p.spot2.getX()][p.spot2.getY()] = 'B';
+                }
+            	
+                if (p.isVertical())
+                {
+                    vertCount++;
                            
-                            if (p.spot1.getX() == 1 || p.spot1.getX() == 6) // plays close to the L and R walls are more valuable
-                            {
-                                    vertCount++;
-                            }
-                    }
-                    else
+                    if (p.spot1.getY() == 1 || p.spot1.getY() == 6) // plays close to the L and R walls are more valuable
                     {
-                            horzCount++;
-                           
-                            if (p.spot1.getY() == 1 || p.spot1.getY() == 6) // plays close to the north and south walls are more valuable
-                            {
-                                    horzCount++;
-                            }
+                        vertCount++;
                     }
-                   
-                    boardForNode[p.spot1.getX()][p.spot1.getY()] = 'B';
-                    boardForNode[p.spot2.getX()][p.spot2.getY()] = 'B';
+                }
+                else
+                {
+                    horzCount++;
+                           
+                    if (p.spot1.getX() == 1 || p.spot1.getX() == 6) // plays close to the north and south walls are more valuable
+                    {
+                        horzCount++;
+                    }
+                }     
             }
            
             ArrayList<PlayablePair> vertMoves = PlayablePair.availableMoves(0, boardForNode); //white's moves

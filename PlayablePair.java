@@ -11,11 +11,11 @@ public class PlayablePair {
 		spot2 = v2;
 	}
 	
-	public PlayablePair()
+	/*public PlayablePair()
 	{
 		spot1 = new Coord();
 		spot2 = new Coord();
-	}
+	}*/
 	
 	public boolean containsVector(Coord vec)
 	{

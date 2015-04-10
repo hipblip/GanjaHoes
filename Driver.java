@@ -37,7 +37,7 @@ public class Driver {
 		
 		System.out.println("Welcome!!\n");
 		
-		System.out.println("Would you like to:\n1. Play against another person\n2. Play against the computer");
+		System.out.println("Would you like to:\n1. Play against another person\n2. Play against Idiotbot");
 		System.out.print("Response: ");
 		response = sc.nextInt();
 		sc.nextLine();
@@ -50,8 +50,33 @@ public class Driver {
 			sc.nextLine();
 		}
 		
+		Gameboard.getInstance().setGameType(Gameboard.gameType.values()[response - 1]);
 		
-		Gameboard.getInstance().setGameType(Gameboard.gameType.values()[response - 1]);		
+		int response2 = 0;
+		boolean first = true;
+		if (response == 2) 
+		{
+			do 
+			{
+				System.out.println("Who goes first?\n1. You\n2. Idiotbot");
+				System.out.println("Response: ");
+				response2 = sc.nextInt();
+				sc.nextLine();
+			} while (response2 != 1 && response2 != 2);
+			
+			if (response2 == 1)
+			{
+				first = true;
+			}
+			else
+			{
+				first = false;
+			}
+		}
+	
+		
+		
+		Gameboard.getInstance().setPlayerGoesFirst(first);
 	}
 		
 	static void exit() 

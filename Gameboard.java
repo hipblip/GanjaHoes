@@ -7,7 +7,7 @@ public class Gameboard {
 	private static Gameboard instance = null;
 	private char[][] gameBoard;
 	
-	private boolean botIsHorizontal = false;
+	private boolean botIsHorizontal;
 	
 	private int _BoardX = 8;
 	private int _BoardY = 8;
@@ -24,8 +24,14 @@ public class Gameboard {
 	
 	private Gameboard() 
 	{		
+		botIsHorizontal = true;
 		initBoard();
 		ai = new Minimax(minMaxDepth);
+	}
+	
+	public void setPlayerGoesFirst(boolean first)
+	{
+		botIsHorizontal = first;
 	}
 	
 	/*
@@ -117,7 +123,7 @@ public class Gameboard {
 				int alpha = ai.alphaBeta(n, Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), false);
 				for (int i = 0; i < n.children.size(); i++)
 				{
-					System.out.println(n.children.get(i).getCoord());
+					//System.out.println(n.children.get(i).getCoord());
 					if (alpha == n.children.get(i).getHeuristic()) {
 						pos1 = n.children.get(i).getCoord().toString();
 						break;
@@ -183,7 +189,7 @@ public class Gameboard {
 					int alpha = ai.alphaBeta(n, Integer.MIN_VALUE, Integer.MAX_VALUE, ai.getDepth(), true);
 					for (int i = 0; i < n.children.size(); i++)
 					{
-						System.out.println(n.children.get(i).getCoord());
+						//System.out.println(n.children.get(i).getCoord());
 						if (alpha == n.children.get(i).getHeuristic()) {
 							pos1 = n.children.get(i).getCoord().toString();
 							break;
@@ -201,12 +207,12 @@ public class Gameboard {
 					
 					if (turn > 1)
 					{
-						System.out.println("depth 3");
+						//System.out.println("depth 3");
 						ai.setDepth(3);
 					}
 					if (turn > 7)
 					{
-						System.out.println("depth 4");
+						//System.out.println("depth 4");
 						ai.setDepth(4);
 					}
 				}
